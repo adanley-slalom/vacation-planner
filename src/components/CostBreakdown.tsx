@@ -2,13 +2,13 @@ import type { Itinerary } from '../lib/types';
 
 interface CostBreakdownProps {
   itinerary: Itinerary;
-  budgetMax: number;
+  budget: number;
 }
 
-export function CostBreakdown({ itinerary, budgetMax }: CostBreakdownProps) {
+export function CostBreakdown({ itinerary, budget }: CostBreakdownProps) {
   const { costs } = itinerary;
-  const isUnderBudget = costs.total <= budgetMax;
-  const isWithinTenPercent = costs.total <= budgetMax * 1.1;
+  const isUnderBudget = costs.total <= budget;
+  const isWithinTenPercent = costs.total <= budget * 1.1;
 
   const getBudgetColor = () => {
     if (isUnderBudget) return 'text-green-600';

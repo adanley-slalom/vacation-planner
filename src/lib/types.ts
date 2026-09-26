@@ -1,6 +1,5 @@
 export type TripBasics = {
-  budgetMin: number;
-  budgetMax: number;
+  budget: number;
   startDate: string;
   endDate: string;
   days: number;

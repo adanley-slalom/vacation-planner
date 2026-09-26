@@ -106,7 +106,7 @@ export function ItineraryViewStep() {
       </div>
 
       {/* Cost Breakdown */}
-      <CostBreakdown itinerary={itinerary} budgetMax={tripBasics.budgetMax} />
+      <CostBreakdown itinerary={itinerary} budget={tripBasics.budget} />
 
       {/* Day-by-day itinerary */}
       <div className="mb-8">

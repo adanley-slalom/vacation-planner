@@ -41,8 +41,7 @@ export function TripBasicsStep() {
   const { state, dispatch } = useAppContext();
   const [formData, setFormData] = useState<TripBasics>(
     state.tripBasics || {
-      budgetMin: 1000,
-      budgetMax: 5000,
+      budget: 3000,
       startDate: '',
       endDate: '',
       days: 0,
@@ -52,8 +51,7 @@ export function TripBasicsStep() {
   );
 
   const isValid =
-    formData.budgetMin > 0 &&
-    formData.budgetMax > formData.budgetMin &&
+    formData.budget > 0 &&
     formData.startDate &&
     formData.endDate &&
     formData.travelers > 0;
@@ -71,7 +69,7 @@ export function TripBasicsStep() {
         payload: [
           {
             role: 'assistant',
-            content: `You've got ${formData.days} days and a $${formData.budgetMin.toLocaleString()}–${formData.budgetMax.toLocaleString()} budget. What kind of trip are you in the mood for?`,
+            content: `You've got ${formData.days} days and a $${formData.budget.toLocaleString()} budget. What kind of trip are you in the mood for?`,
           },
         ],
       });
@@ -79,72 +77,54 @@ export function TripBasicsStep() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="text-center mb-10">
-        <span className="block text-sm font-bold tracking-wide uppercase text-coral mb-4">
-          AI trip planner
-        </span>
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-ink mb-3">
-          Plan your trip <span className="italic">with AI</span>.
-        </h1>
-        <p className="text-gray-600 text-lg max-w-lg mx-auto">
-          Tell us your budget and dates — get a personalized, day-by-day itinerary in minutes.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-        <div className="bg-ocean text-offwhite rounded-2xl p-6 md:p-8">
-          <div className="text-3xl mb-3">🤖</div>
-          <div className="text-2xl font-serif font-bold mb-1">AI-powered</div>
-          <div className="text-sm text-offwhite/80">Built by AI, not templates</div>
-        </div>
-        <div className="bg-coral text-offwhite rounded-2xl p-6 md:p-8">
-          <div className="text-3xl mb-3">💰</div>
-          <div className="text-2xl font-serif font-bold mb-1">Budget-smart</div>
-          <div className="text-sm text-offwhite/80">Fits the number you give us</div>
-        </div>
-        <div className="bg-seaglass text-ink rounded-2xl p-6 md:p-8">
-          <div className="text-3xl mb-3">⚡</div>
-          <div className="text-2xl font-serif font-bold mb-1">Instant itinerary</div>
-          <div className="text-sm text-ink/70">Ready in minutes, not days</div>
-        </div>
-      </div>
-
-      <div id="trip-form" className="space-y-8 bg-offwhite p-8 rounded-xl">
-        <div>
-          <label className="block text-sm font-medium text-ink mb-2">Budget range</label>
-          <BudgetInput
-            min={formData.budgetMin}
-            max={formData.budgetMax}
-            onChange={(min, max) => setFormData({ ...formData, budgetMin: min, budgetMax: max })}
-          />
+    <div>
+      {/* Hero Section */}
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+        <div className="text-center mb-12 max-w-2xl">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-ink mb-4">
+            Plan your trip with AI.
+          </h1>
+          <p className="text-xl md:text-2xl font-serif text-gray-600 italic">
+            Get a personalized itinerary in minutes.
+          </p>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-ink mb-2">Trip dates</label>
-          <DateRangePicker
-            startDate={formData.startDate}
-            endDate={formData.endDate}
-            onDatesChange={(start, end, days) =>
-              setFormData({ ...formData, startDate: start, endDate: end, days })
-            }
-          />
-        </div>
+        {/* Form Card */}
+        <div id="trip-form" className="w-full max-w-2xl bg-white rounded-3xl shadow-lg p-8 mb-8">
+          <div className="space-y-6">
+            <div>
+              <BudgetInput
+                value={formData.budget}
+                onChange={(budget) => setFormData({ ...formData, budget })}
+              />
+            </div>
 
-        <button
-          onClick={handleContinue}
-          disabled={!isValid}
-          className={`w-full py-3 rounded-full font-semibold text-white transition-colors ${
-            isValid
-              ? 'bg-coral hover:bg-orange-600 cursor-pointer'
-              : 'bg-gray-400 cursor-not-allowed'
-          }`}
-        >
-          Continue
-        </button>
-        <p className="text-center text-xs text-gray-500 -mt-4">
-          Free to use · Takes about 2 minutes · No signup required
-        </p>
+            <div>
+              <DateRangePicker
+                startDate={formData.startDate}
+                endDate={formData.endDate}
+                onDatesChange={(start, end, days) =>
+                  setFormData({ ...formData, startDate: start, endDate: end, days })
+                }
+              />
+            </div>
+
+            <button
+              onClick={handleContinue}
+              disabled={!isValid}
+              className={`w-full py-3 rounded-full font-semibold text-white transition-colors ${
+                isValid
+                  ? 'bg-coral hover:bg-orange-600 cursor-pointer'
+                  : 'bg-gray-400 cursor-not-allowed'
+              }`}
+            >
+              Let's go
+            </button>
+            <p className="text-center text-xs text-gray-500">
+              Free to use · No signup required
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="mt-16">
