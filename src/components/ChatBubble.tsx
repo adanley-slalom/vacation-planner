@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { IconRobot } from '@tabler/icons-react';
 
 interface ChatBubbleProps {
   message: string;
@@ -6,17 +7,22 @@ interface ChatBubbleProps {
 }
 
 export function ChatBubble({ message, isUser }: ChatBubbleProps) {
-  return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
-      <div
-        className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg ${
-          isUser
-            ? 'bg-ocean text-offwhite rounded-br-none'
-            : 'bg-sand text-ink rounded-bl-none'
-        }`}
-      >
-        <p className="text-sm leading-relaxed">{message}</p>
+  if (isUser) {
+    return (
+      <div className="flex justify-end mb-6">
+        <div className="max-w-xs lg:max-w-md px-4 py-3 rounded-2xl rounded-br-md bg-ocean text-offwhite">
+          <p className="text-sm leading-relaxed">{message}</p>
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="flex gap-3 mb-6">
+      <div className="w-8 h-8 rounded-full bg-ocean text-offwhite flex items-center justify-center shrink-0">
+        <IconRobot size={16} />
+      </div>
+      <p className="text-[15px] leading-relaxed text-ink pt-1">{message}</p>
     </div>
   );
 }
@@ -29,8 +35,11 @@ export function TypingIndicator({ isVisible }: TypingIndicatorProps) {
   if (!isVisible) return null;
 
   return (
-    <div className="flex gap-2 mb-4">
-      <div className="flex items-center gap-1">
+    <div className="flex gap-3 mb-6">
+      <div className="w-8 h-8 rounded-full bg-ocean text-offwhite flex items-center justify-center shrink-0">
+        <IconRobot size={16} />
+      </div>
+      <div className="flex items-center gap-1 pt-3">
         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />

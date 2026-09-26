@@ -1,40 +1,71 @@
 import { useState } from 'react';
-import { IconRobot, IconMessageCircle } from '@tabler/icons-react';
 import { BudgetInput } from '../components/BudgetInput';
+import { TravelersInput } from '../components/TravelersInput';
 import { DateRangePicker } from '../components/DateRangePicker';
+import { ChatDemo } from '../components/ChatDemo';
 import type { TripBasics } from '../lib/types';
 import { useAppContext } from '../state/AppContext';
 
 const INSPIRATION_TRIPS = [
   {
-    title: 'Beach Escape',
+    title: 'Caribbean Escape',
     subtitle: 'Sun, sand and slow mornings',
-    img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=80',
+    img: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?auto=format&fit=crop&w=500&q=80',
   },
   {
-    title: 'City Break',
-    subtitle: 'Skylines, food halls and nightlife',
-    img: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=500&q=80',
+    title: 'Grand Japan Adventure',
+    subtitle: 'Temples, cherry blossoms and neon streets',
+    img: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=500&q=80',
   },
   {
-    title: 'Adventure Trip',
+    title: 'African Safari',
     subtitle: 'Trails, peaks and open air',
     img: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=500&q=80',
   },
   {
-    title: 'Food & Wine Journey',
-    subtitle: 'Vineyards, tastings and local flavor',
-    img: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=500&q=80',
+    title: 'Northern Lights in Norway',
+    subtitle: 'Fjords, arctic skies and dancing auroras',
+    img: 'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=500&q=80',
   },
   {
-    title: 'Relaxation Retreat',
-    subtitle: 'Spas, quiet and doing nothing',
-    img: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=500&q=80',
+    title: 'Inca Trail Odyssey',
+    subtitle: 'Mountain passes and Machu Picchu at dawn',
+    img: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=500&q=80',
   },
   {
     title: 'Culture & History Tour',
     subtitle: 'Old streets and living stories',
     img: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Greek Island Hopping',
+    subtitle: 'Whitewashed villages and turquoise coves',
+    img: 'https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Iceland Ring Road',
+    subtitle: 'Glaciers, waterfalls and endless daylight',
+    img: 'https://images.unsplash.com/photo-1504829857797-ddff29c27927?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Egyptian Pyramids Expedition',
+    subtitle: 'Ancient wonders along the Nile',
+    img: 'https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Bali Temple Retreat',
+    subtitle: 'Rice terraces, incense and ocean sunsets',
+    img: 'https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'New York City Lights',
+    subtitle: 'Skyscrapers, Broadway and rooftop views',
+    img: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=500&q=80',
+  },
+  {
+    title: 'Sydney Harbour Escape',
+    subtitle: 'Beaches, the Opera House and coastal walks',
+    img: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=500&q=80',
   },
 ];
 
@@ -77,13 +108,27 @@ export function TripBasicsStep() {
     }
   };
 
+  const startThemedChat = (trip: { title: string; subtitle: string }) => {
+    dispatch({ type: 'SET_TRIP_BASICS', payload: formData });
+    dispatch({ type: 'SET_STEP', payload: 2 });
+    dispatch({
+      type: 'SET_MESSAGES',
+      payload: [
+        {
+          role: 'user',
+          content: `I'd love a ${trip.title} trip — ${trip.subtitle}.`,
+        },
+      ],
+    });
+  };
+
   return (
     <div>
       {/* Hero Section */}
       <div 
         className="min-h-screen flex flex-col items-center justify-center relative bg-cover bg-center"
         style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80")',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1920&q=80")',
         }}
       >
         {/* Overlay */}
@@ -91,7 +136,7 @@ export function TripBasicsStep() {
         
         <div className="relative z-10 text-center mb-12 max-w-2xl px-4">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-4">
-            Plan your trip with AI.
+            Stop scrolling. Start traveling.
           </h1>
           <p className="text-xl md:text-2xl font-sans text-white/90">
             Get a personalized itinerary in minutes.
@@ -104,14 +149,25 @@ export function TripBasicsStep() {
           <div className="flex gap-4 items-end">
             {/* Budget Field - Left */}
             <div className="flex-1">
+              <label className="block text-sm font-medium text-ink mb-2">Max Budget</label>
               <BudgetInput
                 value={formData.budget}
                 onChange={(budget) => setFormData({ ...formData, budget })}
               />
             </div>
 
+            {/* Travelers Field */}
+            <div className="w-36">
+              <label className="block text-sm font-medium text-ink mb-2">Travelers</label>
+              <TravelersInput
+                value={formData.travelers}
+                onChange={(travelers) => setFormData({ ...formData, travelers })}
+              />
+            </div>
+
             {/* Date Range Field - Middle */}
             <div className="flex-1">
+              <label className="block text-sm font-medium text-ink mb-2">Trip Dates</label>
               <DateRangePicker
                 startDate={formData.startDate}
                 endDate={formData.endDate}
@@ -122,66 +178,67 @@ export function TripBasicsStep() {
             </div>
 
             {/* Button */}
-            <button
-              onClick={handleContinue}
-              disabled={!isValid}
-              className={`px-8 py-5 border border-transparent rounded-lg text-lg font-semibold text-white transition-colors whitespace-nowrap ${
-                isValid
-                  ? 'bg-coral hover:bg-orange-600 cursor-pointer'
-                  : 'bg-gray-400 cursor-not-allowed'
-              }`}
-            >
-              Let's go
-            </button>
+            <div>
+              <label className="block text-sm font-medium text-ink mb-2 opacity-0 select-none" aria-hidden="true">
+                Go
+              </label>
+              <button
+                onClick={handleContinue}
+                disabled={!isValid}
+                className={`px-8 py-5 border border-transparent rounded-lg text-lg font-semibold text-white transition-colors whitespace-nowrap ${
+                  isValid
+                    ? 'bg-coral hover:bg-orange-600 cursor-pointer'
+                    : 'bg-gray-400 cursor-not-allowed'
+                }`}
+              >
+                Let's go
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto w-full px-4 py-8 flex-1">
         <div className="mt-16">
-          <h2 className="text-center text-3xl md:text-4xl font-serif font-bold text-ink mb-6">
-            <span className="bg-sand px-2">For trips you can't afford to get wrong.</span>
+          <h2 className="text-center text-3xl md:text-4xl font-serif font-bold text-ink mb-3">
+            From a few words to a full itinerary.
           </h2>
-        <div className="relative rounded-2xl overflow-hidden h-[380px] md:h-[440px]">
-          <img
-            src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80"
-            alt="Traveler overlooking a mountain landscape"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-
-          <div className="absolute top-4 left-4 md:top-6 md:left-6 flex items-start gap-2 max-w-[240px]">
-            <div className="w-9 h-9 rounded-full bg-ocean text-offwhite flex items-center justify-center shrink-0">
-              <IconRobot size={18} />
-            </div>
-            <div className="bg-white rounded-2xl rounded-tl-none shadow-lg p-3">
-              <div className="text-xs font-semibold text-coral mb-1">Wayfare AI</div>
-              <p className="text-xs text-ink">
-                I compared hundreds of destinations and built a 5-day trip around your{' '}
-                <strong>exact dates and budget</strong>.
-              </p>
+          <p className="text-center text-gray-600 max-w-xl mx-auto mb-6">
+            No forms, no spreadsheets — just chat with Wayfare AI and watch your trip take shape in real time.
+          </p>
+        <div className="relative rounded-2xl overflow-hidden bg-ocean flex flex-col md:flex-row min-h-[520px] md:min-h-[440px]">
+          {/* Image side */}
+          <div className="relative md:w-1/2 h-56 md:h-auto shrink-0">
+            <img
+              src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=1200&q=80"
+              alt="Northern lights over a snowy fjord in Norway"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-ocean/80 via-ocean/10 to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-8 text-white">
+              <div className="text-xs font-semibold uppercase tracking-wider text-white/70 mb-2">
+                See it in action
+              </div>
+              <div className="text-2xl md:text-3xl font-serif font-bold leading-tight">
+                Just chat.<br />We'll build the trip.
+              </div>
             </div>
           </div>
 
-          <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 flex items-end gap-2 max-w-[260px]">
-            <div className="bg-white rounded-2xl rounded-br-none shadow-lg p-3">
-              <div className="text-xs font-semibold text-coral mb-1">Wayfare AI</div>
-              <p className="text-xs text-ink">
-                Tell me <strong>adventure</strong>, <strong>relaxation</strong>, or anything in
-                between — I'll rebuild the whole itinerary in seconds.
-              </p>
-            </div>
-            <div className="w-9 h-9 rounded-full bg-seaglass text-ink flex items-center justify-center shrink-0">
-              <IconMessageCircle size={18} />
-            </div>
+          {/* Live chat demo side */}
+          <div className="md:w-1/2 flex items-center justify-center p-6 md:p-10 bg-gradient-to-br from-seaglass/10 via-white to-sand/20">
+            <ChatDemo />
           </div>
         </div>
       </div>
+      </div>
 
-      <div className="mt-16 relative overflow-hidden rounded-2xl bg-gradient-to-br from-seaglass/30 via-sand/40 to-coral/10 p-8 md:p-12">
-        <div className="absolute -top-10 -left-10 w-40 h-40 bg-seaglass/40 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-coral/20 rounded-full blur-2xl pointer-events-none" />
+      {/* Trips tailored to you - full-bleed rotating showcase */}
+      <div className="mt-16 relative overflow-hidden bg-gradient-to-br from-seaglass/20 via-sand/30 to-coral/10 py-16">
+        <div className="absolute -top-16 -left-16 w-72 h-72 bg-seaglass/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-10 -right-10 w-80 h-80 bg-coral/20 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative text-center mb-8">
+        <div className="relative text-center mb-10 px-4">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-ink mb-2">
             Trips <span className="italic">tailored</span> to you
           </h2>
@@ -190,37 +247,38 @@ export function TripBasicsStep() {
           </p>
         </div>
 
-        <div className="relative grid grid-cols-2 md:grid-cols-3 gap-4">
-          {INSPIRATION_TRIPS.map((trip) => (
-            <div
-              key={trip.title}
-              className="relative h-40 rounded-xl overflow-hidden group cursor-pointer"
-              onClick={scrollToForm}
-            >
-              <img
-                src={trip.img}
-                alt={trip.title}
-                className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-3">
-                <div className="text-sm font-semibold text-white">{trip.title}</div>
-                <div className="text-xs text-white/80">{trip.subtitle}</div>
+        <div className="marquee-container relative overflow-hidden">
+          <div className="flex gap-4 w-max animate-marquee">
+            {[...INSPIRATION_TRIPS, ...INSPIRATION_TRIPS].map((trip, idx) => (
+              <div
+                key={`${trip.title}-${idx}`}
+                className="relative h-80 w-[26rem] shrink-0 rounded-xl overflow-hidden group cursor-pointer"
+                onClick={() => startThemedChat(trip)}
+              >
+                <img
+                  src={trip.img}
+                  alt={trip.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <div className="text-lg font-semibold text-white">{trip.title}</div>
+                  <div className="text-sm text-white/80">{trip.subtitle}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        <div className="relative text-center mt-8">
+        <div className="relative text-center mt-10">
           <button
             onClick={scrollToForm}
             className="px-8 py-3 bg-ink text-white rounded-full font-semibold hover:bg-black transition-colors cursor-pointer"
           >
-            Start planning your trip
+            View All
           </button>
         </div>
       </div>
-    </div>
     </div>
   );
 }

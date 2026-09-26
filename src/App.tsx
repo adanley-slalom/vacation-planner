@@ -16,7 +16,7 @@ function App() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-offwhite via-white to-sand">
       {/* Page header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="w-full px-6 py-4 flex items-center justify-between">
           <a href="#" className="text-lg font-serif font-bold text-ink flex items-center gap-2">
             <IconPlane size={20} className="text-coral" /> Wayfare
           </a>
@@ -34,16 +34,18 @@ function App() {
       {/* Main content */}
       {state.step === 1 ? (
         <TripBasicsStep />
+      ) : state.step === 2 ? (
+        <ChatPlannerStep />
       ) : (
         <div className="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
-          {state.step === 2 && <ChatPlannerStep />}
-          {state.step === 3 && <ItineraryViewStep />}
+          <ItineraryViewStep />
         </div>
       )}
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white print:hidden">
-        <div className="max-w-6xl mx-auto px-4 py-10">
+      {state.step !== 2 && (
+        <footer className="border-t border-gray-200 bg-white print:hidden">
+          <div className="w-full px-6 py-10">
           <div className="flex flex-col md:flex-row md:justify-between gap-8">
             <div>
               <div className="text-lg font-serif font-bold text-ink flex items-center gap-2">
@@ -86,8 +88,9 @@ function App() {
           <div className="border-t border-gray-100 mt-8 pt-6 text-xs text-gray-400 text-center">
             © {new Date().getFullYear()} Wayfare. All prices shown are estimates.
           </div>
-        </div>
-      </footer>
+          </div>
+        </footer>
+      )}
     </div>
   );
 }

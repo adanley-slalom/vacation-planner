@@ -7,6 +7,8 @@ import {
   IconYoga,
   IconBuildingBank,
   IconSparkles,
+  IconSend,
+  IconWand,
 } from '@tabler/icons-react';
 import { ChatBubble, TypingIndicator, QuickReplies, QuickReplyChip } from '../components/ChatBubble';
 import { sendChatMessage, generateItinerary } from '../lib/api';
@@ -26,10 +28,13 @@ export function ChatPlannerStep() {
   const { state, dispatch } = useAppContext();
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showQuickReplies, setShowQuickReplies] = useState(true);
+  const [showQuickReplies, setShowQuickReplies] = useState(
+    () => !(state.messages.length === 1 && state.messages[0].role === 'user')
+  );
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const prevMessagesLengthRef = useRef(state.messages.length);
+  const hasKickedOffRef = useRef(false);
 
   const tripBasics = state.tripBasics!;
   const messages = state.messages;
@@ -46,38 +51,21 @@ export function ChatPlannerStep() {
     prevMessagesLengthRef.current = messages.length;
   }, [messages]);
 
-  const handleSendMessage = async (text: string, surprise = false) => {
-    if (!text.trim() && !surprise) return;
-
-    const messageText = surprise ? 'Surprise me!' : text;
-    const newMessages = [...messages, { role: 'user' as const, content: messageText }];
-    dispatch({ type: 'SET_MESSAGES', payload: newMessages });
-    setUserInput('');
+  const runAssistantTurn = async (currentMessages: typeof messages) => {
     setLoading(true);
     setError(null);
-    setShowQuickReplies(false);
-
     try {
-      if (surprise) {
-        // Generate itinerary directly for surprise
-        const itinerary = await generateItinerary(tripBasics, newMessages, true);
+      const response = await sendChatMessage(tripBasics, currentMessages);
+      const updatedMessages = [
+        ...currentMessages,
+        { role: 'assistant' as const, content: response.reply },
+      ];
+      dispatch({ type: 'SET_MESSAGES', payload: updatedMessages });
+
+      if (response.readyToPlan) {
+        const itinerary = await generateItinerary(tripBasics, updatedMessages, false);
         dispatch({ type: 'SET_ITINERARY', payload: itinerary });
         dispatch({ type: 'SET_STEP', payload: 3 });
-      } else {
-        const response = await sendChatMessage(tripBasics, newMessages);
-        const assistantMessage = response.reply;
-        const updatedMessages = [
-          ...newMessages,
-          { role: 'assistant' as const, content: assistantMessage },
-        ];
-        dispatch({ type: 'SET_MESSAGES', payload: updatedMessages });
-
-        if (response.readyToPlan) {
-          // Auto-generate itinerary
-          const itinerary = await generateItinerary(tripBasics, updatedMessages, false);
-          dispatch({ type: 'SET_ITINERARY', payload: itinerary });
-          dispatch({ type: 'SET_STEP', payload: 3 });
-        }
       }
     } catch (err) {
       setError('Failed to process your request. Please try again.');
@@ -87,82 +75,122 @@ export function ChatPlannerStep() {
     }
   };
 
+  // Themed-trip cards seed a single user message and skip straight to the LLM
+  // for a reply (e.g. asking for or suggesting dates), instead of the quick replies.
+  useEffect(() => {
+    if (!hasKickedOffRef.current && messages.length === 1 && messages[0].role === 'user') {
+      hasKickedOffRef.current = true;
+      setShowQuickReplies(false);
+      runAssistantTurn(messages);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSendMessage = async (text: string, surprise = false) => {
+    if (!text.trim() && !surprise) return;
+
+    const messageText = surprise ? 'Surprise me!' : text;
+    const newMessages = [...messages, { role: 'user' as const, content: messageText }];
+    dispatch({ type: 'SET_MESSAGES', payload: newMessages });
+    setUserInput('');
+    setShowQuickReplies(false);
+
+    if (surprise) {
+      setLoading(true);
+      setError(null);
+      try {
+        const itinerary = await generateItinerary(tripBasics, newMessages, true);
+        dispatch({ type: 'SET_ITINERARY', payload: itinerary });
+        dispatch({ type: 'SET_STEP', payload: 3 });
+      } catch (err) {
+        setError('Failed to process your request. Please try again.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      await runAssistantTurn(newMessages);
+    }
+  };
+
   return (
-    <div className="max-w-2xl mx-auto h-screen flex flex-col bg-gradient-to-b from-offwhite to-white">
-      <div className="flex-1 overflow-y-auto p-6">
-        <div className="mb-4">
-          <h2 className="text-2xl font-serif font-bold text-ink">Tell us about your ideal trip</h2>
-        </div>
-
-        <div className="space-y-4">
-          {messages.map((msg, idx) => (
-            <ChatBubble key={idx} message={msg.content} isUser={msg.role === 'user'} />
-          ))}
-
-          {showQuickReplies && messages.length === 1 && (
-            <div className="mt-6">
-              <QuickReplies>
-                {QUICK_REPLIES.map((reply) => (
-                  <QuickReplyChip
-                    key={reply.label}
-                    label={reply.label}
-                    icon={reply.icon}
-                    onClick={() =>
-                      handleSendMessage(reply.label, reply.label === 'Surprise me')
-                    }
-                  />
-                ))}
-              </QuickReplies>
-            </div>
-          )}
-
-          <TypingIndicator isVisible={loading} />
-
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-              <p>{error}</p>
-              <button
-                onClick={() => {
-                  setError(null);
-                  setLoading(false);
-                }}
-                className="mt-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
-              >
-                Retry
-              </button>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
+    <div className="max-w-2xl mx-auto px-6 pt-8 pb-40">
+      <div className="mb-6">
+        <h2 className="text-2xl font-serif font-bold text-ink">Tell us about your ideal trip</h2>
       </div>
 
-      <div className="border-t border-gray-200 bg-white p-6">
-        <div className="flex gap-2 mb-3">
-          <input
-            type="text"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(userInput)}
-            placeholder="Type your response..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-ocean"
-            disabled={loading}
-          />
+      <div>
+        {messages.map((msg, idx) => (
+          <ChatBubble key={idx} message={msg.content} isUser={msg.role === 'user'} />
+        ))}
+
+        {showQuickReplies && messages.length === 1 && (
+          <div className="mt-2 mb-6">
+            <QuickReplies>
+              {QUICK_REPLIES.map((reply) => (
+                <QuickReplyChip
+                  key={reply.label}
+                  label={reply.label}
+                  icon={reply.icon}
+                  onClick={() =>
+                    handleSendMessage(reply.label, reply.label === 'Surprise me')
+                  }
+                />
+              ))}
+            </QuickReplies>
+          </div>
+        )}
+
+        <TypingIndicator isVisible={loading} />
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <p>{error}</p>
+            <button
+              onClick={() => {
+                setError(null);
+                setLoading(false);
+              }}
+              className="mt-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
+        <div ref={messagesEndRef} />
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 px-4 pt-3 pb-4 pointer-events-none">
+        <div className="max-w-2xl mx-auto pointer-events-auto">
           <button
-            onClick={() => handleSendMessage(userInput)}
-            disabled={loading || !userInput.trim()}
-            className="px-6 py-2 bg-coral text-white rounded-lg hover:bg-orange-600 disabled:bg-gray-400 transition-colors"
+            onClick={() => handleSendMessage('', true)}
+            disabled={loading}
+            className="mx-auto mb-3 flex items-center gap-1.5 px-4 py-1.5 bg-white border border-seaglass text-ink rounded-full text-xs font-semibold shadow-md hover:bg-seaglass/20 disabled:opacity-50 transition-colors"
           >
-            Send
+            <IconWand size={14} className="text-ocean" />
+            Build my itinerary
           </button>
+          <div className="flex items-center gap-2 bg-white rounded-full pl-5 pr-1.5 py-1.5 shadow-lg focus-within:shadow-xl transition-shadow">
+            <input
+              type="text"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(userInput)}
+              placeholder="Type your response..."
+              className="flex-1 bg-transparent focus:outline-none text-sm"
+              disabled={loading}
+            />
+            <button
+              onClick={() => handleSendMessage(userInput)}
+              disabled={loading || !userInput.trim()}
+              className="w-9 h-9 shrink-0 rounded-full bg-coral text-white flex items-center justify-center hover:bg-orange-600 disabled:bg-gray-300 transition-colors"
+              aria-label="Send message"
+            >
+              <IconSend size={16} />
+            </button>
+          </div>
         </div>
-        <button
-          onClick={() => handleSendMessage('', true)}
-          disabled={loading}
-          className="w-full px-4 py-2 bg-seaglass text-ink rounded-lg hover:bg-opacity-80 disabled:bg-gray-400 transition-colors font-medium"
-        >
-          Build my itinerary
-        </button>
       </div>
     </div>
   );

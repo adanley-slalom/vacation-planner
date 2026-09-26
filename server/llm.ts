@@ -8,7 +8,22 @@ const groq = new Groq({
 const MODEL = process.env.LLM_MODEL || 'mixtral-8x7b-32768';
 
 export async function chatWithAssistant(basics: TripBasics, messages: ChatMessage[]): Promise<string> {
-  const systemPrompt = `You are a friendly travel planner. The user's trip: ${basics.days} days from ${basics.startDate} to ${basics.endDate}, budget $${basics.budget} total for ${basics.travelers} traveler(s). Ask at most 2 short follow-up questions to understand their preferences, one at a time. Keep replies under 60 words. When you have enough information, end your reply with the exact token [READY]`;
+  const hasDates = Boolean(basics.startDate && basics.endDate);
+  const hasBudget = basics.budget > 0;
+
+  const tripDetails = [
+    hasDates
+      ? `${basics.days} days from ${basics.startDate} to ${basics.endDate}`
+      : 'no travel dates chosen yet',
+    hasBudget ? `a total budget of $${basics.budget}` : 'no budget specified yet',
+    `for ${basics.travelers || 1} traveler(s)`,
+  ].join(', ');
+
+  const missingDatesInstruction = !hasDates
+    ? ' The user has not picked travel dates yet — ask what dates they have in mind, or if they seem flexible, recommend a good time of year to go based on the trip theme and move on.'
+    : '';
+
+  const systemPrompt = `You are a friendly travel planner. The user's trip: ${tripDetails}.${missingDatesInstruction} Ask at most 2 short follow-up questions to understand their preferences, one at a time. Keep replies under 60 words. When you have enough information, end your reply with the exact token [READY]`;
 
   const response = await groq.chat.completions.create({
     model: MODEL,
@@ -55,10 +70,12 @@ type Itinerary = {
 
   let systemPrompt = `Create a vacation itinerary as JSON only, matching this TypeScript type exactly:
 ${itineraryType}. No markdown, no commentary.
-Rules: total cost must fit within $${basics.budget}; include one entry per day for all ${basics.days} days; use realistic estimated prices in USD; set needsCar based on the destination; lodgingSuggestions[].type must be exactly one of "hotel", "airbnb", or "hostel" (lowercase, no other values).`
+Rules: ${basics.budget > 0 ? `total cost must fit within $${basics.budget}` : 'infer a reasonable total cost from the conversation and destination'}; ${basics.days > 0 ? `include one entry per day for all ${basics.days} days` : 'choose a sensible trip length (e.g. 4-7 days) based on the conversation'}; use realistic estimated prices in USD; set needsCar based on the destination; lodgingSuggestions[].type must be exactly one of "hotel", "airbnb", or "hostel" (lowercase, no other values).`
 
   if (surprise) {
-    systemPrompt += ` Choose a destination that suits the season of ${basics.startDate} and the budget, and fill surpriseReason with one sentence explaining why.`;
+    systemPrompt += basics.startDate
+      ? ` Choose a destination that suits the season of ${basics.startDate} and the budget, and fill surpriseReason with one sentence explaining why.`
+      : ` Choose a destination that suits the conversation and budget, and fill surpriseReason with one sentence explaining why.`;
   }
 
   const response = await groq.chat.completions.create({
