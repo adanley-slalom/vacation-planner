@@ -43,8 +43,32 @@ export function TripBasicsStep() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-4xl font-serif font-bold text-ink mb-2">Let's plan your trip</h1>
-      <p className="text-gray-600 mb-8">Start by telling us about your ideal vacation</p>
+      <div className="text-center mb-10">
+        <span className="inline-block text-xs font-semibold tracking-wide uppercase text-coral bg-coral/10 px-3 py-1 rounded-full mb-4">
+          AI trip planner
+        </span>
+        <h1 className="text-4xl md:text-5xl font-serif font-bold text-ink mb-3">
+          Plan your trip with AI.
+        </h1>
+        <p className="text-gray-600 text-lg max-w-lg mx-auto">
+          Tell us your budget and dates — get a personalized, day-by-day itinerary in minutes.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3 mb-8 text-center">
+        <div className="bg-offwhite rounded-lg p-4">
+          <div className="text-2xl mb-1">🤖</div>
+          <div className="text-xs font-semibold text-ink">AI-powered</div>
+        </div>
+        <div className="bg-offwhite rounded-lg p-4">
+          <div className="text-2xl mb-1">💰</div>
+          <div className="text-xs font-semibold text-ink">Budget-smart</div>
+        </div>
+        <div className="bg-offwhite rounded-lg p-4">
+          <div className="text-2xl mb-1">⚡</div>
+          <div className="text-xs font-semibold text-ink">Instant itinerary</div>
+        </div>
+      </div>
 
       <div className="space-y-8 bg-offwhite p-8 rounded-xl">
         <div>
@@ -78,6 +102,9 @@ export function TripBasicsStep() {
         >
           Continue
         </button>
+        <p className="text-center text-xs text-gray-500 -mt-4">
+          Free to use · Takes about 2 minutes · No signup required
+        </p>
       </div>
     </div>
   );
