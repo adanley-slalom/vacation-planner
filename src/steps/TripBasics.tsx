@@ -23,7 +23,6 @@ export function TripBasicsStep() {
     formData.budgetMax > formData.budgetMin &&
     formData.startDate &&
     formData.endDate &&
-    formData.origin.trim() &&
     formData.travelers > 0;
 
   const handleContinue = () => {
@@ -65,17 +64,6 @@ export function TripBasicsStep() {
             onDatesChange={(start, end, days) =>
               setFormData({ ...formData, startDate: start, endDate: end, days })
             }
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-ink mb-2">Departing from</label>
-          <input
-            type="text"
-            placeholder="City or airport code"
-            value={formData.origin}
-            onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-ocean"
           />
         </div>
 

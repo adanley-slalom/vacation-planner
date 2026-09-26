@@ -1,16 +1,16 @@
-import OpenAI from 'openai';
+import Groq from 'groq-sdk';
 import type { TripBasics, ChatMessage } from '../src/lib/types';
 
-const openai = new OpenAI({
-  apiKey: process.env.LLM_API_KEY,
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
-const MODEL = process.env.LLM_MODEL || 'gpt-4o-mini';
+const MODEL = process.env.LLM_MODEL || 'mixtral-8x7b-32768';
 
 export async function chatWithAssistant(basics: TripBasics, messages: ChatMessage[]): Promise<string> {
-  const systemPrompt = `You are a friendly travel planner. The user's trip: ${basics.days} days from ${basics.startDate} to ${basics.endDate}, budget $${basics.budgetMin}-${basics.budgetMax} total for ${basics.travelers} traveler(s), departing from ${basics.origin}. Ask at most 2 short follow-up questions to understand their preferences, one at a time. Keep replies under 60 words. When you have enough information, end your reply with the exact token [READY].`;
+  const systemPrompt = `You are a friendly travel planner. The user's trip: ${basics.days} days from ${basics.startDate} to ${basics.endDate}, budget $${basics.budgetMin}-${basics.budgetMax} total for ${basics.travelers} traveler(s). Ask at most 2 short follow-up questions to understand their preferences, one at a time. Keep replies under 60 words. When you have enough information, end your reply with the exact token [READY].`;
 
-  const response = await openai.chat.completions.create({
+  const response = await groq.chat.completions.create({
     model: MODEL,
     messages: [
       { role: 'system', content: systemPrompt },
@@ -49,19 +49,19 @@ type Itinerary = {
     flights: number; lodging: number; car: number;
     activities: number; food: number; total: number;
   };
-  lodgingSuggestions: { type: "hotel" | "airbnb"; name: string; area: string; nightlyRate: number }[];
+  lodgingSuggestions: { type: "hotel" | "airbnb" | "hostel"; name: string; area: string; nightlyRate: number }[];
   needsCar: boolean;
 };`;
 
   let systemPrompt = `Create a vacation itinerary as JSON only, matching this TypeScript type exactly:
 ${itineraryType}. No markdown, no commentary.
-Rules: total cost must fit within $${basics.budgetMax}; include one entry per day for all ${basics.days} days; use realistic estimated prices in USD; set needsCar based on the destination.`;
+Rules: total cost must fit within $${basics.budgetMax}; include one entry per day for all ${basics.days} days; use realistic estimated prices in USD; set needsCar based on the destination; lodgingSuggestions[].type must be exactly one of "hotel", "airbnb", or "hostel" (lowercase, no other values).`
 
   if (surprise) {
     systemPrompt += ` Choose a destination that suits the season of ${basics.startDate} and the budget, and fill surpriseReason with one sentence explaining why.`;
   }
 
-  const response = await openai.chat.completions.create({
+  const response = await groq.chat.completions.create({
     model: MODEL,
     messages: [
       { role: 'system', content: systemPrompt },

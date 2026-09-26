@@ -2,7 +2,6 @@ import { useAppContext } from './state/AppContext';
 import { TripBasicsStep } from './steps/TripBasics';
 import { ChatPlannerStep } from './steps/ChatPlanner';
 import { ItineraryViewStep } from './steps/ItineraryView';
-import './App.css';
 
 function App() {
   const { state } = useAppContext();

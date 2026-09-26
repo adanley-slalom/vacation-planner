@@ -43,7 +43,7 @@ export type Itinerary = {
     total: number;
   };
   lodgingSuggestions: Array<{
-    type: "hotel" | "airbnb";
+    type: "hotel" | "airbnb" | "hostel";
     name: string;
     area: string;
     nightlyRate: number;

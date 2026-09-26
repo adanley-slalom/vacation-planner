@@ -32,7 +32,7 @@ const ItinerarySchema = z.object({
   }),
   lodgingSuggestions: z.array(
     z.object({
-      type: z.enum(['hotel', 'airbnb']),
+      type: z.enum(['hotel', 'airbnb', 'hostel']),
       name: z.string(),
       area: z.string(),
       nightlyRate: z.number().min(0),
