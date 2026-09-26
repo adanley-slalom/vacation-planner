@@ -5,12 +5,19 @@ interface BudgetInputProps {
 
 export function BudgetInput({ value, onChange }: BudgetInputProps) {
   return (
-    <div>
+    <div className="relative">
+      {value > 0 && (
+        <span className="absolute left-5 top-1/2 -translate-y-1/2 text-lg font-medium text-ink pointer-events-none">
+          $
+        </span>
+      )}
       <input
         type="number"
         value={value || ''}
         onChange={(e) => onChange(Math.max(0, Number(e.target.value)))}
-        className="w-full px-5 py-5 border border-gray-300 rounded-lg focus:outline-none focus:border-ocean text-lg font-medium text-ink"
+        className={`w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:border-ocean text-lg font-medium text-ink ${
+          value > 0 ? 'pl-8 pr-5' : 'px-5'
+        }`}
         min="0"
         placeholder="Max Budget"
       />
