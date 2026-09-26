@@ -9,11 +9,24 @@ interface DateRangePickerProps {
   onDatesChange: (startDate: string, endDate: string, days: number) => void;
 }
 
+// Format/parse using local date parts to avoid UTC off-by-one shifts from Date's ISO handling
+function toLocalDateString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function parseLocalDateString(value: string): Date {
+  const [year, month, day] = value.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRangePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<'start' | 'end'>('start');
-  const [tempStart, setTempStart] = useState<Date | undefined>(startDate ? new Date(startDate) : undefined);
-  const [tempEnd, setTempEnd] = useState<Date | undefined>(endDate ? new Date(endDate) : undefined);
+  const [tempStart, setTempStart] = useState<Date | undefined>(startDate ? parseLocalDateString(startDate) : undefined);
+  const [tempEnd, setTempEnd] = useState<Date | undefined>(endDate ? parseLocalDateString(endDate) : undefined);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -33,8 +46,8 @@ export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRange
         const days = differenceInDays(day, tempStart) + 1;
         if (days <= 30) {
           onDatesChange(
-            tempStart.toISOString().split('T')[0],
-            day.toISOString().split('T')[0],
+            toLocalDateString(tempStart),
+            toLocalDateString(day),
             days
           );
           setIsOpen(false);
@@ -44,23 +57,30 @@ export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRange
     }
   };
 
-  const displayText = startDate && endDate
-    ? `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`
-    : 'Select dates';
+  const displayText =
+    startDate && endDate
+      ? `${parseLocalDateString(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${parseLocalDateString(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+      : startDate
+      ? `${parseLocalDateString(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - Return`
+      : 'Depart - Return';
 
-  const days = startDate && endDate ? differenceInDays(new Date(endDate), new Date(startDate)) + 1 : 0;
+  const days = startDate && endDate ? differenceInDays(parseLocalDateString(endDate), parseLocalDateString(startDate)) + 1 : 0;
 
   return (
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-left hover:border-ocean"
+        className="w-full px-5 py-5 border border-gray-300 rounded-lg bg-white hover:border-ocean transition-colors flex items-center justify-between"
       >
-        {displayText}
+        <div className="flex items-center gap-3">
+          <span className="text-xl text-ocean">📅</span>
+          <span className="text-lg font-medium text-ink">{displayText}</span>
+        </div>
+        <span className="text-gray-500 text-sm ml-2">▼</span>
       </button>
 
       {isOpen && (
-        <div className="absolute top-12 left-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
+        <div className="absolute top-[calc(100%+8px)] left-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
           <div className="mb-2 text-sm font-semibold text-ink">
             {mode === 'start' ? 'Select start date' : 'Select end date'}
           </div>

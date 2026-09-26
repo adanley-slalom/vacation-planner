@@ -26,11 +26,14 @@ function App() {
       </header>
 
       {/* Main content */}
-      <div className="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
-        {state.step === 1 && <TripBasicsStep />}
-        {state.step === 2 && <ChatPlannerStep />}
-        {state.step === 3 && <ItineraryViewStep />}
-      </div>
+      {state.step === 1 ? (
+        <TripBasicsStep />
+      ) : (
+        <div className="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+          {state.step === 2 && <ChatPlannerStep />}
+          {state.step === 3 && <ItineraryViewStep />}
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white print:hidden">

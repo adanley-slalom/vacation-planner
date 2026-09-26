@@ -4,6 +4,7 @@
 
 html {
   scroll-behavior: smooth;
+  font-family: "Figtree", sans-serif;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -16,7 +16,7 @@ export default {
       },
       fontFamily: {
         'serif': ['Literata', 'serif'],
-        'sans': ['Inter', 'sans-serif'],
+        'sans': ['Figtree', 'sans-serif'],
       }
     },
   },

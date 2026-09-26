@@ -5,18 +5,15 @@ interface BudgetInputProps {
 
 export function BudgetInput({ value, onChange }: BudgetInputProps) {
   return (
-    <div className="space-y-4">
+    <div>
       <input
         type="number"
-        value={value}
+        value={value || ''}
         onChange={(e) => onChange(Math.max(0, Number(e.target.value)))}
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-ocean"
+        className="w-full px-5 py-5 border border-gray-300 rounded-lg focus:outline-none focus:border-ocean text-lg font-medium text-ink"
         min="0"
-        placeholder="Enter budget (USD)"
+        placeholder="Max Budget"
       />
-      <div className="text-sm text-gray-600">
-        Budget: ${value.toLocaleString()}
-      </div>
     </div>
   );
 }

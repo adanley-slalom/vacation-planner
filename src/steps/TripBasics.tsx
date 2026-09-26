@@ -41,7 +41,7 @@ export function TripBasicsStep() {
   const { state, dispatch } = useAppContext();
   const [formData, setFormData] = useState<TripBasics>(
     state.tripBasics || {
-      budget: 3000,
+      budget: 0,
       startDate: '',
       endDate: '',
       days: 0,
@@ -79,40 +79,52 @@ export function TripBasicsStep() {
   return (
     <div>
       {/* Hero Section */}
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-        <div className="text-center mb-12 max-w-2xl">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-ink mb-4">
+      <div 
+        className="min-h-screen flex flex-col items-center justify-center relative bg-cover bg-center"
+        style={{
+          backgroundImage: 'url("https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80")',
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+        
+        <div className="relative z-10 text-center mb-12 max-w-2xl px-4">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-4">
             Plan your trip with AI.
           </h1>
-          <p className="text-xl md:text-2xl font-serif text-gray-600 italic">
+          <p className="text-xl md:text-2xl font-sans text-white/90">
             Get a personalized itinerary in minutes.
           </p>
         </div>
 
         {/* Form Card */}
-        <div id="trip-form" className="w-full max-w-2xl bg-white rounded-3xl shadow-lg p-8 mb-8">
-          <div className="space-y-6">
-            <div>
+        <div id="trip-form" className="relative z-10 w-full max-w-4xl bg-white rounded-3xl shadow-lg p-8 mb-8 mx-4">
+          {/* Main Form Row */}
+          <div className="flex gap-4 items-end">
+            {/* Budget Field - Left */}
+            <div className="w-48">
               <BudgetInput
                 value={formData.budget}
                 onChange={(budget) => setFormData({ ...formData, budget })}
               />
             </div>
 
-            <div>
+            {/* Date Range Field - Middle */}
+            <div className="flex-1">
               <DateRangePicker
                 startDate={formData.startDate}
                 endDate={formData.endDate}
-                onDatesChange={(start, end, days) =>
-                  setFormData({ ...formData, startDate: start, endDate: end, days })
+                onDatesChange={(startDate, endDate, days) =>
+                  setFormData({ ...formData, startDate, endDate, days })
                 }
               />
             </div>
 
+            {/* Button */}
             <button
               onClick={handleContinue}
               disabled={!isValid}
-              className={`w-full py-3 rounded-full font-semibold text-white transition-colors ${
+              className={`px-8 py-5 border border-transparent rounded-lg text-lg font-semibold text-white transition-colors whitespace-nowrap ${
                 isValid
                   ? 'bg-coral hover:bg-orange-600 cursor-pointer'
                   : 'bg-gray-400 cursor-not-allowed'
@@ -120,17 +132,15 @@ export function TripBasicsStep() {
             >
               Let's go
             </button>
-            <p className="text-center text-xs text-gray-500">
-              Free to use · No signup required
-            </p>
           </div>
         </div>
       </div>
 
-      <div className="mt-16">
-        <h2 className="text-center text-3xl md:text-4xl font-serif font-bold text-ink mb-6">
-          <span className="bg-sand px-2">For trips you can't afford to get wrong.</span>
-        </h2>
+      <div className="max-w-6xl mx-auto w-full px-4 py-8 flex-1">
+        <div className="mt-16">
+          <h2 className="text-center text-3xl md:text-4xl font-serif font-bold text-ink mb-6">
+            <span className="bg-sand px-2">For trips you can't afford to get wrong.</span>
+          </h2>
         <div className="relative rounded-2xl overflow-hidden h-[380px] md:h-[440px]">
           <img
             src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80"
@@ -209,6 +219,7 @@ export function TripBasicsStep() {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }
