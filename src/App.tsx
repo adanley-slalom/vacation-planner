@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { IconPlane } from '@tabler/icons-react';
 import { useAppContext } from './state/AppContext';
 import { TripBasicsStep } from './steps/TripBasics';
 import { ChatPlannerStep } from './steps/ChatPlanner';
@@ -6,13 +8,17 @@ import { ItineraryViewStep } from './steps/ItineraryView';
 function App() {
   const { state } = useAppContext();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [state.step]);
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-offwhite via-white to-sand">
       {/* Page header */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <a href="#" className="text-lg font-serif font-bold text-ink flex items-center gap-2">
-            <span>✈️</span> Wayfare
+            <IconPlane size={20} className="text-coral" /> Wayfare
           </a>
           <nav className="hidden sm:flex gap-6 text-sm text-gray-600">
             <a href="#trip-form" className="hover:text-coral">
@@ -40,7 +46,9 @@ function App() {
         <div className="max-w-6xl mx-auto px-4 py-10">
           <div className="flex flex-col md:flex-row md:justify-between gap-8">
             <div>
-              <div className="text-lg font-serif font-bold text-ink">✈️ Wayfare</div>
+              <div className="text-lg font-serif font-bold text-ink flex items-center gap-2">
+                <IconPlane size={20} className="text-coral" /> Wayfare
+              </div>
               <p className="text-sm text-gray-500 mt-1 max-w-xs">
                 AI-powered trip planning that fits your budget and your dates.
               </p>

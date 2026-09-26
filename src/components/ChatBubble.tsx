@@ -50,16 +50,16 @@ export function QuickReplies({ children }: QuickRepliesProps) {
 interface QuickReplyChipProps {
   label: string;
   onClick: () => void;
-  icon?: string;
+  icon?: ReactNode;
 }
 
 export function QuickReplyChip({ label, onClick, icon }: QuickReplyChipProps) {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 bg-seaglass text-ink rounded-full text-sm font-medium hover:bg-opacity-80 transition-colors"
+      className="px-4 py-2 bg-seaglass text-ink rounded-full text-sm font-medium hover:bg-opacity-80 transition-colors flex items-center gap-1.5"
     >
-      {icon && <span className="mr-1">{icon}</span>}
+      {icon}
       {label}
     </button>
   );

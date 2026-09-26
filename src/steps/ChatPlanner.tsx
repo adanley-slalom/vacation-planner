@@ -1,16 +1,25 @@
 import { useState, useEffect, useRef } from 'react';
+import {
+  IconBeach,
+  IconBuildingSkyscraper,
+  IconMountain,
+  IconGlassFull,
+  IconYoga,
+  IconBuildingBank,
+  IconSparkles,
+} from '@tabler/icons-react';
 import { ChatBubble, TypingIndicator, QuickReplies, QuickReplyChip } from '../components/ChatBubble';
 import { sendChatMessage, generateItinerary } from '../lib/api';
 import { useAppContext } from '../state/AppContext';
 
 const QUICK_REPLIES = [
-  { label: 'Beach', emoji: '🏖️' },
-  { label: 'City', emoji: '🏙️' },
-  { label: 'Adventure', emoji: '🏔️' },
-  { label: "Food & wine", emoji: '🍷' },
-  { label: 'Relaxation', emoji: '🧘' },
-  { label: 'Culture & history', emoji: '🏛️' },
-  { label: 'Surprise me', emoji: '✨' },
+  { label: 'Beach', icon: <IconBeach size={16} /> },
+  { label: 'City', icon: <IconBuildingSkyscraper size={16} /> },
+  { label: 'Adventure', icon: <IconMountain size={16} /> },
+  { label: "Food & wine", icon: <IconGlassFull size={16} /> },
+  { label: 'Relaxation', icon: <IconYoga size={16} /> },
+  { label: 'Culture & history', icon: <IconBuildingBank size={16} /> },
+  { label: 'Surprise me', icon: <IconSparkles size={16} /> },
 ];
 
 export function ChatPlannerStep() {
@@ -20,6 +29,7 @@ export function ChatPlannerStep() {
   const [showQuickReplies, setShowQuickReplies] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevMessagesLengthRef = useRef(state.messages.length);
 
   const tripBasics = state.tripBasics!;
   const messages = state.messages;
@@ -28,8 +38,12 @@ export function ChatPlannerStep() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Only scroll when new messages are appended, not on initial mount (StrictMode-safe)
   useEffect(() => {
-    scrollToBottom();
+    if (messages.length > prevMessagesLengthRef.current) {
+      scrollToBottom();
+    }
+    prevMessagesLengthRef.current = messages.length;
   }, [messages]);
 
   const handleSendMessage = async (text: string, surprise = false) => {
@@ -92,7 +106,7 @@ export function ChatPlannerStep() {
                   <QuickReplyChip
                     key={reply.label}
                     label={reply.label}
-                    icon={reply.emoji}
+                    icon={reply.icon}
                     onClick={() =>
                       handleSendMessage(reply.label, reply.label === 'Surprise me')
                     }

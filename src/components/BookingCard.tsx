@@ -1,16 +1,18 @@
+import type { ReactNode } from 'react';
+
 interface BookingCardProps {
   title: string;
   description: string;
   bookingUrl: string;
-  icon?: string;
+  icon?: ReactNode;
 }
 
 export function BookingCard({ title, description, bookingUrl, icon }: BookingCardProps) {
   return (
     <div className="bg-offwhite p-4 rounded-lg border border-gray-200">
       <div className="flex items-start justify-between mb-2">
-        <div>
-          {icon && <span className="text-2xl mr-2">{icon}</span>}
+        <div className="flex items-center gap-2">
+          {icon}
           <h4 className="font-semibold text-ink">{title}</h4>
         </div>
       </div>

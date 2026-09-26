@@ -1,3 +1,4 @@
+import { IconPlane, IconBed, IconHome, IconCar } from '@tabler/icons-react';
 import { BookingCard } from '../components/BookingCard';
 import { DayTimeline } from '../components/DayTimeline';
 import { CostBreakdown } from '../components/CostBreakdown';
@@ -80,26 +81,26 @@ export function ItineraryViewStep() {
             title="Flights"
             description={`${tripBasics.origin} → ${itinerary.destinationAirportCode}`}
             bookingUrl={flightsLink}
-            icon="✈️"
+            icon={<IconPlane size={22} className="text-ocean" />}
           />
           <BookingCard
             title="Hotel"
             description={`${tripBasics.startDate} to ${tripBasics.endDate}`}
             bookingUrl={hotelLink}
-            icon="🏨"
+            icon={<IconBed size={22} className="text-ocean" />}
           />
           <BookingCard
             title="Airbnb"
             description={`${tripBasics.startDate} to ${tripBasics.endDate}`}
             bookingUrl={airbnbLink}
-            icon="🏠"
+            icon={<IconHome size={22} className="text-ocean" />}
           />
           {itinerary.needsCar && (
             <BookingCard
               title="Car Rental"
               description={`Pick up and drop off in ${itinerary.destination}`}
               bookingUrl={carLink}
-              icon="🚗"
+              icon={<IconCar size={22} className="text-ocean" />}
             />
           )}
         </div>

@@ -5,6 +5,7 @@
 html {
   scroll-behavior: smooth;
   font-family: "Figtree", sans-serif;
+  overflow-anchor: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

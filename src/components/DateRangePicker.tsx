@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, type DateRange } from 'react-day-picker';
+import { IconCalendar, IconChevronDown } from '@tabler/icons-react';
 import { differenceInDays } from 'date-fns';
 import 'react-day-picker/dist/style.css';
 
@@ -24,47 +25,27 @@ function parseLocalDateString(value: string): Date {
 
 export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRangePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState<'start' | 'end'>('start');
-  const [tempStart, setTempStart] = useState<Date | undefined>(startDate ? parseLocalDateString(startDate) : undefined);
-  const [tempEnd, setTempEnd] = useState<Date | undefined>(endDate ? parseLocalDateString(endDate) : undefined);
+  const [range, setRange] = useState<DateRange | undefined>(
+    startDate ? { from: parseLocalDateString(startDate), to: endDate ? parseLocalDateString(endDate) : undefined } : undefined
+  );
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const handleDayClick = (day: Date) => {
-    day.setHours(0, 0, 0, 0);
+  const handleClear = () => setRange(undefined);
 
-    if (mode === 'start') {
-      setTempStart(day);
-      setMode('end');
-      if (tempEnd && day > tempEnd) {
-        setTempEnd(undefined);
-      }
-    } else {
-      if (tempStart && day >= tempStart) {
-        setTempEnd(day);
-        const days = differenceInDays(day, tempStart) + 1;
-        if (days <= 30) {
-          onDatesChange(
-            toLocalDateString(tempStart),
-            toLocalDateString(day),
-            days
-          );
-          setIsOpen(false);
-          setMode('start');
-        }
-      }
+  const handleDone = () => {
+    if (range?.from && range?.to) {
+      const days = differenceInDays(range.to, range.from) + 1;
+      onDatesChange(toLocalDateString(range.from), toLocalDateString(range.to), days);
+      setIsOpen(false);
     }
   };
 
   const displayText =
     startDate && endDate
       ? `${parseLocalDateString(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${parseLocalDateString(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-      : startDate
-      ? `${parseLocalDateString(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - Return`
       : 'Depart - Return';
-
-  const days = startDate && endDate ? differenceInDays(parseLocalDateString(endDate), parseLocalDateString(startDate)) + 1 : 0;
 
   return (
     <div className="relative">
@@ -73,32 +54,43 @@ export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRange
         className="w-full px-5 py-5 border border-gray-300 rounded-lg bg-white hover:border-ocean transition-colors flex items-center justify-between"
       >
         <div className="flex items-center gap-3">
-          <span className="text-xl text-ocean">📅</span>
+          <IconCalendar size={20} className="text-ocean" />
           <span className="text-lg font-medium text-ink">{displayText}</span>
         </div>
-        <span className="text-gray-500 text-sm ml-2">▼</span>
+        <IconChevronDown size={16} className="text-gray-500 ml-2" />
       </button>
 
       {isOpen && (
-        <div className="absolute top-[calc(100%+8px)] left-0 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10">
-          <div className="mb-2 text-sm font-semibold text-ink">
-            {mode === 'start' ? 'Select start date' : 'Select end date'}
-          </div>
+        <div className="absolute top-[calc(100%+8px)] left-0 bg-white border border-gray-300 rounded-xl shadow-lg p-6 z-20 w-max">
           <DayPicker
-            mode="single"
-            selected={mode === 'start' ? tempStart : tempEnd}
-            onDayClick={handleDayClick}
-            disabled={(day: Date): boolean => {
-              const isBefore = day < today;
-              const isTooFar = tempStart ? differenceInDays(day, tempStart) > 29 : false;
-              return isBefore || isTooFar;
+            mode="range"
+            numberOfMonths={2}
+            selected={range}
+            onSelect={setRange}
+            disabled={(day: Date) => {
+              if (day < today) return true;
+              if (range?.from && !range?.to) {
+                return differenceInDays(day, range.from) > 29;
+              }
+              return false;
             }}
           />
-          {days > 0 && (
-            <div className="mt-2 text-sm text-ocean font-medium">
-              {days} day{days !== 1 ? 's' : ''}{days > 1 ? `, ${days - 1} night${days !== 2 ? 's' : ''}` : ''}
-            </div>
-          )}
+          <div className="flex items-center justify-end gap-6 mt-4 pt-4 border-t border-gray-200">
+            <button onClick={handleClear} className="text-ocean font-semibold text-sm hover:underline">
+              Clear
+            </button>
+            <button
+              onClick={handleDone}
+              disabled={!(range?.from && range?.to)}
+              className={`px-6 py-2 rounded-lg font-semibold text-white text-sm transition-colors ${
+                range?.from && range?.to
+                  ? 'bg-coral hover:bg-orange-600 cursor-pointer'
+                  : 'bg-gray-300 cursor-not-allowed'
+              }`}
+            >
+              Done
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tabler/icons-react": "^3.48.0",
     "@tailwindcss/postcss": "^4.3.3",
     "cors": "^2.8.6",
     "date-fns": "^4.4.0",

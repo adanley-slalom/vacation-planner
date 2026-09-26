@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { IconRobot, IconMessageCircle } from '@tabler/icons-react';
 import { BudgetInput } from '../components/BudgetInput';
 import { DateRangePicker } from '../components/DateRangePicker';
 import type { TripBasics } from '../lib/types';
@@ -102,7 +103,7 @@ export function TripBasicsStep() {
           {/* Main Form Row */}
           <div className="flex gap-4 items-end">
             {/* Budget Field - Left */}
-            <div className="w-48">
+            <div className="flex-1">
               <BudgetInput
                 value={formData.budget}
                 onChange={(budget) => setFormData({ ...formData, budget })}
@@ -149,8 +150,8 @@ export function TripBasicsStep() {
           />
 
           <div className="absolute top-4 left-4 md:top-6 md:left-6 flex items-start gap-2 max-w-[240px]">
-            <div className="w-9 h-9 rounded-full bg-ocean text-offwhite flex items-center justify-center text-sm shrink-0">
-              🤖
+            <div className="w-9 h-9 rounded-full bg-ocean text-offwhite flex items-center justify-center shrink-0">
+              <IconRobot size={18} />
             </div>
             <div className="bg-white rounded-2xl rounded-tl-none shadow-lg p-3">
               <div className="text-xs font-semibold text-coral mb-1">Wayfare AI</div>
@@ -169,8 +170,8 @@ export function TripBasicsStep() {
                 between — I'll rebuild the whole itinerary in seconds.
               </p>
             </div>
-            <div className="w-9 h-9 rounded-full bg-seaglass text-ink flex items-center justify-center text-sm shrink-0">
-              💬
+            <div className="w-9 h-9 rounded-full bg-seaglass text-ink flex items-center justify-center shrink-0">
+              <IconMessageCircle size={18} />
             </div>
           </div>
         </div>
