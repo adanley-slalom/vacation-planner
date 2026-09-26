@@ -15,7 +15,7 @@ export default {
         'ink': '#1C1C1C',
       },
       fontFamily: {
-        'serif': ['Fraunces', 'serif'],
+        'serif': ['Literata', 'serif'],
         'sans': ['Inter', 'sans-serif'],
       }
     },
