@@ -1,4 +1,4 @@
-import Groq from 'groq-sdk';
+const Groq = require('groq-sdk');
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -6,7 +6,7 @@ const groq = new Groq({
 
 const MODEL = process.env.LLM_MODEL || 'qwen/qwen3.8-27b';
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -50,4 +50,4 @@ export default async function handler(req, res) {
     console.error('Chat error:', error);
     res.status(500).json({ error: 'Failed to process chat request', details: error.message });
   }
-}
+};

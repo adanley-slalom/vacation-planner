@@ -1,5 +1,5 @@
-import Groq from 'groq-sdk';
-import { z } from 'zod';
+const Groq = require('groq-sdk');
+const { z } = require('zod');
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -57,7 +57,7 @@ function validateItinerary(data) {
   }
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -120,4 +120,4 @@ Rules: today's date is ${new Date().toISOString().slice(0, 10)}; every day's "da
     console.error('Itinerary error:', error);
     res.status(500).json({ error: 'Failed to generate itinerary', details: error.message });
   }
-}
+};
