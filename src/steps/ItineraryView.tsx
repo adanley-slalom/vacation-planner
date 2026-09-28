@@ -16,6 +16,12 @@ export function ItineraryViewStep() {
   const itinerary = state.itinerary!;
   const tripBasics = state.tripBasics!;
 
+  // Themed/surprise trips can skip the trip-basics form, so tripBasics dates may be
+  // blank — fall back to the itinerary's own day range, which is always populated.
+  const displayStartDate = tripBasics.startDate || itinerary.days[0]?.date || '';
+  const displayEndDate = tripBasics.endDate || itinerary.days[itinerary.days.length - 1]?.date || '';
+  const displayOrigin = tripBasics.origin.trim() || 'Your city';
+
   const handleStartOver = () => {
     dispatch({ type: 'RESET' });
   };
@@ -32,75 +38,88 @@ export function ItineraryViewStep() {
     tripBasics.origin,
     itinerary.destination,
     itinerary.destinationAirportCode,
-    tripBasics.startDate,
-    tripBasics.endDate,
+    displayStartDate,
+    displayEndDate,
     tripBasics.travelers
   );
 
   const hotelLink = buildBookingComHotelLink(
     itinerary.destination,
-    tripBasics.startDate,
-    tripBasics.endDate,
+    displayStartDate,
+    displayEndDate,
     tripBasics.travelers
   );
 
   const airbnbLink = buildAirbnbLink(
     itinerary.destination,
-    tripBasics.startDate,
-    tripBasics.endDate,
+    displayStartDate,
+    displayEndDate,
     tripBasics.travelers
   );
 
   const carLink = itinerary.needsCar
     ? buildKayakCarsLink(
         itinerary.destination,
-        tripBasics.startDate,
-        tripBasics.endDate,
+        displayStartDate,
+        displayEndDate,
         tripBasics.origin
       )
     : '';
 
   return (
-    <div className="max-w-4xl mx-auto pb-12">
+    <div className="relative max-w-4xl mx-auto pb-16">
+      {/* Ambient glow, echoes the chat step's radial background */}
+      <div
+        className="absolute -top-10 left-1/2 -translate-x-1/2 w-[40rem] h-[24rem] pointer-events-none print:hidden"
+        style={{
+          background: 'radial-gradient(ellipse 60% 60% at 50% 30%, rgba(180,126,238,0.18), transparent 70%)',
+        }}
+      />
+
       {/* Header */}
-      <div className="bg-gradient-to-r from-ocean to-seaglass text-offwhite p-8 rounded-lg mb-8 print:break-after-page">
-        <h1 className="text-4xl font-serif font-bold mb-2">{itinerary.destination}</h1>
-        <div className="text-lg opacity-90">
-          {tripBasics.startDate} to {tripBasics.endDate} • {tripBasics.travelers} traveler{tripBasics.travelers !== 1 ? 's' : ''}
+      <div
+        className="relative text-white p-8 sm:p-10 rounded-2xl shadow-card mb-10 print:break-after-page overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #212a4d 0%, #4b3f8f 55%, #b47eee 100%)' }}
+      >
+        <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{itinerary.destination}</h1>
+        <div className="text-base sm:text-lg text-white/75">
+          {displayStartDate} to {displayEndDate} • {tripBasics.travelers} traveler{tripBasics.travelers !== 1 ? 's' : ''}
         </div>
         {itinerary.surpriseReason && (
-          <p className="mt-4 italic">"Why we picked this: {itinerary.surpriseReason}"</p>
+          <p className="mt-5 text-white/90 italic border-l-2 border-white/30 pl-4">
+            "Why we picked this: {itinerary.surpriseReason}"
+          </p>
         )}
       </div>
 
       {/* Booking Cards */}
-      <div className="mb-12">
-        <h2 className="text-2xl font-serif font-bold text-ink mb-4">Book your trip</h2>
-        <div className="grid gap-4 md:grid-cols-2 print:grid-cols-1">
+      <div className="mb-10">
+        <h2 className="text-2xl font-serif font-bold text-ink mb-5">Book your trip</h2>
+        <div className="grid gap-5 md:grid-cols-2 print:grid-cols-1">
           <BookingCard
             title="Flights"
-            description={`${tripBasics.origin} → ${itinerary.destinationAirportCode}`}
+            description={`${displayOrigin} → ${itinerary.destinationAirportCode}`}
             bookingUrl={flightsLink}
-            icon={<IconPlane size={22} className="text-ocean" />}
+            icon={<IconPlane size={22} />}
           />
           <BookingCard
             title="Hotel"
-            description={`${tripBasics.startDate} to ${tripBasics.endDate}`}
+            description={`${displayStartDate} to ${displayEndDate}`}
             bookingUrl={hotelLink}
-            icon={<IconBed size={22} className="text-ocean" />}
+            icon={<IconBed size={22} />}
           />
           <BookingCard
             title="Airbnb"
-            description={`${tripBasics.startDate} to ${tripBasics.endDate}`}
+            description={`${displayStartDate} to ${displayEndDate}`}
             bookingUrl={airbnbLink}
-            icon={<IconHome size={22} className="text-ocean" />}
+            icon={<IconHome size={22} />}
           />
           {itinerary.needsCar && (
             <BookingCard
               title="Car Rental"
               description={`Pick up and drop off in ${itinerary.destination}`}
               bookingUrl={carLink}
-              icon={<IconCar size={22} className="text-ocean" />}
+              icon={<IconCar size={22} />}
             />
           )}
         </div>
@@ -110,8 +129,8 @@ export function ItineraryViewStep() {
       <CostBreakdown itinerary={itinerary} budget={tripBasics.budget} />
 
       {/* Day-by-day itinerary */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-serif font-bold text-ink mb-6">Your itinerary</h2>
+      <div className="mb-10">
+        <h2 className="text-2xl font-serif font-bold text-ink mb-5">Your itinerary</h2>
         <div className="print:break-inside-avoid">
           {itinerary.days.map((day) => (
             <DayTimeline key={day.day} day={day} destination={itinerary.destination} />
@@ -120,29 +139,29 @@ export function ItineraryViewStep() {
       </div>
 
       {/* Disclaimer */}
-      <div className="bg-gray-100 p-4 rounded-lg text-xs text-gray-600 mb-8">
+      <div className="text-callout text-sm text-gray-600 mb-10">
         <p>
           <strong>Note:</strong> Prices are estimates. Final prices shown on booking sites may vary.
         </p>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-4 justify-center print:hidden">
+      <div className="flex flex-wrap gap-3 justify-center print:hidden">
         <button
           onClick={handleAdjustInChat}
-          className="px-6 py-3 bg-seaglass text-ink rounded-lg font-semibold hover:bg-opacity-80 transition-colors"
+          className="btn btn-secondary"
         >
           Adjust in chat
         </button>
         <button
           onClick={handlePrint}
-          className="px-6 py-3 bg-ocean text-offwhite rounded-lg font-semibold hover:bg-opacity-80 transition-colors"
+          className="btn btn-primary"
         >
           Print / Save as PDF
         </button>
         <button
           onClick={handleStartOver}
-          className="px-6 py-3 bg-gray-400 text-offwhite rounded-lg font-semibold hover:bg-gray-500 transition-colors"
+          className="btn btn-dark"
         >
           Start over
         </button>

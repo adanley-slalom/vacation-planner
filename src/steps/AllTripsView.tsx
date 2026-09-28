@@ -85,7 +85,7 @@ export function AllTripsViewStep() {
         <div className="mb-10">
           <button
             onClick={handleBack}
-            className="text-coral hover:text-coral-dark font-semibold mb-4 flex items-center gap-2"
+            className="text-coral hover:text-coral/70 font-semibold mb-4 flex items-center gap-2 transition-colors"
           >
             ← Back
           </button>
@@ -102,7 +102,7 @@ export function AllTripsViewStep() {
             <div
               key={trip.title}
               onClick={() => handleTripClick(trip)}
-              className="group relative h-80 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-lg transition-all"
+              className="group relative h-80 rounded-2xl overflow-hidden cursor-pointer shadow-card hover:shadow-lifted transition-all"
             >
               <img
                 src={trip.img}

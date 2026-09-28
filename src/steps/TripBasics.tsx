@@ -145,11 +145,11 @@ export function TripBasicsStep() {
         </div>
 
         {/* Form Card */}
-        <div id="trip-form" className="relative z-10 w-full max-w-4xl bg-white rounded-3xl shadow-lg p-8 mb-8 mx-4">
+        <div id="trip-form" className="relative z-10 w-full max-w-4xl card shadow-lifted p-8 mb-8 mx-4">
           {/* Main Form Row */}
-          <div className="flex gap-4 items-end">
-            {/* Budget Field - Left */}
-            <div className="flex-1">
+          <div className="flex flex-wrap gap-4 items-end">
+            {/* Budget Field */}
+            <div className="flex-1 min-w-[10rem]">
               <label className="block text-sm font-medium text-ink mb-2">Budget</label>
               <BudgetInput
                 value={formData.budget}
@@ -166,8 +166,8 @@ export function TripBasicsStep() {
               />
             </div>
 
-            {/* Date Range Field - Middle */}
-            <div className="flex-1">
+            {/* Date Range Field */}
+            <div className="flex-1 min-w-[12rem]">
               <label className="block text-sm font-medium text-ink mb-2">Trip Dates</label>
               <DateRangePicker
                 startDate={formData.startDate}
@@ -186,11 +186,7 @@ export function TripBasicsStep() {
               <button
                 onClick={handleContinue}
                 disabled={!isValid}
-                className={`px-8 py-5 border border-transparent rounded-lg text-lg font-semibold text-white transition-colors whitespace-nowrap ${
-                  isValid
-                    ? 'bg-coral hover:bg-orange-600 cursor-pointer'
-                    : 'bg-gray-400 cursor-not-allowed'
-                }`}
+                className="btn btn-primary py-5 text-lg whitespace-nowrap"
               >
                 Let's go
               </button>

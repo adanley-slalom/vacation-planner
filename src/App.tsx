@@ -15,9 +15,9 @@ function App() {
   }, [state.step]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-offwhite via-white to-sand">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Page header */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white shadow-soft">
         <div className="w-full px-6 py-4 flex items-center justify-between">
           <button
             onClick={() => dispatch({ type: 'SET_STEP', payload: 1 })}
@@ -61,7 +61,7 @@ function App() {
 
       {/* Footer */}
       {state.step !== 2 && (
-        <footer className="border-t border-gray-200 bg-white print:hidden">
+        <footer className="border-t border-black/10 bg-white print:hidden">
           <div className="w-full px-6 py-10">
           <div className="flex flex-col md:flex-row md:justify-between gap-8">
             <div>

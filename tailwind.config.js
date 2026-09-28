@@ -17,7 +17,14 @@ export default {
       fontFamily: {
         'serif': ['Literata', 'serif'],
         'sans': ['Figtree', 'sans-serif'],
-      }
+      },
+      boxShadow: {
+        'soft': '0 1px 2px rgba(0, 0, 0, 0.08)',
+        'card': '0 0 4px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.08)',
+        'lifted': '0 4px 8px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08)',
+        'ring-inset': 'inset 0 0 0 1px rgba(0, 0, 0, 0.06)',
+        'input-inset': 'inset 0 1px 2px rgba(0, 0, 0, 0.05)',
+      },
     },
   },
   plugins: [],

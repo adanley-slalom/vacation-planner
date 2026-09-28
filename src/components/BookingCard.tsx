@@ -5,23 +5,27 @@ interface BookingCardProps {
   description: string;
   bookingUrl: string;
   icon?: ReactNode;
+  accent?: string;
 }
 
-export function BookingCard({ title, description, bookingUrl, icon }: BookingCardProps) {
+export function BookingCard({ title, description, bookingUrl, icon, accent = '#555dff' }: BookingCardProps) {
   return (
-    <div className="bg-offwhite p-4 rounded-lg border border-gray-200">
-      <div className="flex items-start justify-between mb-2">
-        <div className="flex items-center gap-2">
+    <div className="card p-5 flex flex-col gap-3">
+      <div className="flex items-center gap-3">
+        <div
+          className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${accent} 0%, ${accent}cc 100%)` }}
+        >
           {icon}
-          <h4 className="font-semibold text-ink">{title}</h4>
         </div>
+        <h4 className="font-semibold text-ink text-base">{title}</h4>
       </div>
-      <p className="text-sm text-gray-600 mb-3">{description}</p>
+      <p className="text-sm text-gray-600">{description}</p>
       <a
         href={bookingUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block px-4 py-2 bg-coral text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors"
+        className="btn btn-primary py-2.5 text-sm w-fit"
       >
         Book now
       </a>

@@ -78,7 +78,7 @@ export function ChatDemo() {
   }, [visibleCount, typing]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden flex flex-col w-full max-w-md">
+    <div className="bg-white rounded-2xl shadow-lifted border border-black/10 overflow-hidden flex flex-col w-full max-w-md">
       {/* Window chrome */}
       <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100 bg-gray-50">
         <span className="w-2.5 h-2.5 rounded-full bg-red-300" />
@@ -102,7 +102,7 @@ export function ChatDemo() {
       <div className="px-4 pb-4">
         <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full pl-4 pr-1.5 py-1.5">
           <span className="flex-1 text-sm text-gray-400">Type your response...</span>
-          <span className="w-8 h-8 shrink-0 rounded-full bg-coral text-white flex items-center justify-center">
+          <span className="w-8 h-8 shrink-0 rounded-full bg-coral text-white flex items-center justify-center shadow-soft">
             <IconSend size={14} />
           </span>
         </div>

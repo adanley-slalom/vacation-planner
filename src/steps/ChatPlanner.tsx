@@ -114,64 +114,74 @@ export function ChatPlannerStep() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-6 pt-8 pb-40">
-      <div className="mb-6">
-        <h2 className="text-2xl font-serif font-bold text-ink">Tell us about your ideal trip</h2>
-      </div>
+    <div className="relative min-h-[calc(100vh-4rem)] bg-gray-50 flex items-start sm:items-center justify-center px-4 py-6 sm:py-10 overflow-hidden">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 60% 50% at 50% 45%, rgba(135,128,255,0.16), transparent 70%)',
+        }}
+      />
+      <div className="relative w-full max-w-2xl h-[min(44rem,calc(100vh-6rem))] card shadow-lifted border border-black/5 flex flex-col overflow-hidden">
+        {/* Panel header */}
+        <div className="px-6 py-5 border-b border-black/5 shrink-0">
+          <h2 className="text-xl font-serif font-bold text-ink">Tell us about your ideal trip</h2>
+        </div>
 
-      <div>
-        {messages.map((msg, idx) => (
-          <ChatBubble key={idx} message={msg.content} isUser={msg.role === 'user'} />
-        ))}
+        {/* Scrollable message area */}
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          {messages.map((msg, idx) => (
+            <ChatBubble key={idx} message={msg.content} isUser={msg.role === 'user'} />
+          ))}
 
-        {showQuickReplies && messages.length === 1 && (
-          <div className="mt-2 mb-6">
-            <QuickReplies>
-              {QUICK_REPLIES.map((reply) => (
-                <QuickReplyChip
-                  key={reply.label}
-                  label={reply.label}
-                  icon={reply.icon}
-                  onClick={() =>
-                    handleSendMessage(reply.label, reply.label === 'Surprise me')
-                  }
-                />
-              ))}
-            </QuickReplies>
-          </div>
-        )}
+          {showQuickReplies && messages.length === 1 && (
+            <div className="mt-2 mb-6">
+              <QuickReplies>
+                {QUICK_REPLIES.map((reply) => (
+                  <QuickReplyChip
+                    key={reply.label}
+                    label={reply.label}
+                    icon={reply.icon}
+                    onClick={() =>
+                      handleSendMessage(reply.label, reply.label === 'Surprise me')
+                    }
+                  />
+                ))}
+              </QuickReplies>
+            </div>
+          )}
 
-        <TypingIndicator isVisible={loading} />
+          <TypingIndicator isVisible={loading} />
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            <p>{error}</p>
-            <button
-              onClick={() => {
-                setError(null);
-                setLoading(false);
-              }}
-              className="mt-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
-            >
-              Retry
-            </button>
-          </div>
-        )}
+          {error && (
+            <div className="text-callout shadow-[inset_0_0_0_1px_rgba(200,0,0,0.15)] bg-red-50 text-red-700 mb-6">
+              <p>{error}</p>
+              <button
+                onClick={() => {
+                  setError(null);
+                  setLoading(false);
+                }}
+                className="btn btn-dark mt-3 py-1.5 text-sm"
+              >
+                Retry
+              </button>
+            </div>
+          )}
 
-        <div ref={messagesEndRef} />
-      </div>
+          <div ref={messagesEndRef} />
+        </div>
 
-      <div className="fixed bottom-0 left-0 right-0 px-4 pt-3 pb-4 pointer-events-none">
-        <div className="max-w-2xl mx-auto pointer-events-auto">
+        {/* Composer */}
+        <div className="px-4 sm:px-6 pt-3 pb-4 border-t border-black/5 bg-white/70 shrink-0">
           <button
             onClick={() => handleSendMessage('', true)}
             disabled={loading}
-            className="mx-auto mb-3 flex items-center gap-1.5 px-4 py-1.5 bg-white border border-seaglass text-ink rounded-full text-xs font-semibold shadow-md hover:bg-seaglass/20 disabled:opacity-50 transition-colors"
+            className="btn btn-secondary btn-pill mx-auto mb-3 py-1.5 px-4 text-xs"
           >
             <IconWand size={14} className="text-ocean" />
             Build my itinerary
           </button>
-          <div className="flex items-center gap-2 bg-white rounded-full pl-5 pr-1.5 py-1.5 shadow-lg focus-within:shadow-xl transition-shadow">
+          <div className="input-field flex items-center gap-2 rounded-full pl-5 pr-1.5 py-1.5">
             <input
               type="text"
               value={userInput}
@@ -184,7 +194,7 @@ export function ChatPlannerStep() {
             <button
               onClick={() => handleSendMessage(userInput)}
               disabled={loading || !userInput.trim()}
-              className="w-9 h-9 shrink-0 rounded-full bg-coral text-white flex items-center justify-center hover:bg-orange-600 disabled:bg-gray-300 transition-colors"
+              className="w-9 h-9 shrink-0 rounded-full bg-coral text-white flex items-center justify-center hover:bg-coral/90 disabled:bg-gray-300 transition-colors"
               aria-label="Send message"
             >
               <IconSend size={16} />

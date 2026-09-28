@@ -11,49 +11,46 @@ export function CostBreakdown({ itinerary, budget }: CostBreakdownProps) {
   const isWithinTenPercent = costs.total <= budget * 1.1;
 
   const getBudgetColor = () => {
-    if (isUnderBudget) return 'text-green-600';
-    if (isWithinTenPercent) return 'text-amber-600';
-    return 'text-red-600';
+    if (isUnderBudget) return 'text-green-700';
+    if (isWithinTenPercent) return 'text-amber-700';
+    return 'text-red-700';
   };
 
-  const getBudgetBg = () => {
-    if (isUnderBudget) return 'bg-green-50';
-    if (isWithinTenPercent) return 'bg-amber-50';
-    return 'bg-red-50';
+  const getStatusPill = () => {
+    if (isUnderBudget) return { label: 'Under budget', classes: 'bg-green-100 text-green-700' };
+    if (isWithinTenPercent) return { label: 'Near budget', classes: 'bg-amber-100 text-amber-700' };
+    return { label: 'Over budget', classes: 'bg-red-100 text-red-700' };
   };
+
+  const status = getStatusPill();
+
+  const rows = [
+    { label: 'Flights', value: costs.flights },
+    { label: 'Lodging', value: costs.lodging },
+    ...(costs.car > 0 ? [{ label: 'Car rental', value: costs.car }] : []),
+    { label: 'Activities', value: costs.activities },
+    { label: 'Food estimate', value: costs.food },
+  ];
 
   return (
-    <div className={`${getBudgetBg()} rounded-lg p-6 mb-8`}>
-      <h3 className="text-lg font-serif font-bold text-ink mb-4">Cost breakdown</h3>
-      
-      <div className="space-y-3 mb-6 text-sm">
-        <div className="flex justify-between">
-          <span className="text-gray-700">Flights</span>
-          <span className="font-semibold">${costs.flights}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-700">Lodging</span>
-          <span className="font-semibold">${costs.lodging}</span>
-        </div>
-        {costs.car > 0 && (
-          <div className="flex justify-between">
-            <span className="text-gray-700">Car rental</span>
-            <span className="font-semibold">${costs.car}</span>
-          </div>
-        )}
-        <div className="flex justify-between">
-          <span className="text-gray-700">Activities</span>
-          <span className="font-semibold">${costs.activities}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-700">Food estimate</span>
-          <span className="font-semibold">${costs.food}</span>
-        </div>
+    <div className="card p-6 sm:p-8 mb-10">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-serif font-bold text-ink">Cost breakdown</h3>
+        <span className={`pill ${status.classes}`}>{status.label}</span>
       </div>
 
-      <div className={`border-t border-gray-300 pt-4 flex justify-between ${getBudgetColor()}`}>
-        <span className="font-bold">Total estimated cost</span>
-        <span className="text-xl font-bold">${costs.total}</span>
+      <div className="space-y-3.5 mb-6">
+        {rows.map((row) => (
+          <div key={row.label} className="flex justify-between text-[15px]">
+            <span className="text-gray-600">{row.label}</span>
+            <span className="font-semibold text-ink">${row.value}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="border-t border-black/10 pt-5 flex items-center justify-between">
+        <span className="font-semibold text-ink">Total estimated cost</span>
+        <span className={`text-2xl font-bold ${getBudgetColor()}`}>${costs.total}</span>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export function BudgetInput({ value, onChange }: BudgetInputProps) {
         type="number"
         value={value || ''}
         onChange={(e) => onChange(Math.max(0, Number(e.target.value)))}
-        className={`w-full py-5 border border-gray-300 rounded-lg focus:outline-none focus:border-ocean text-lg font-medium text-ink ${
+        className={`input-field w-full py-5 focus:outline-none text-lg font-medium text-ink ${
           value > 0 ? 'pl-8 pr-5' : 'px-5'
         }`}
         min="0"

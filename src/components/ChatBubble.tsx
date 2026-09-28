@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { IconRobot } from '@tabler/icons-react';
 
 interface ChatBubbleProps {
   message: string;
@@ -10,7 +9,7 @@ export function ChatBubble({ message, isUser }: ChatBubbleProps) {
   if (isUser) {
     return (
       <div className="flex justify-end mb-6">
-        <div className="max-w-xs lg:max-w-md px-4 py-3 rounded-2xl rounded-br-md bg-ocean text-offwhite">
+        <div className="max-w-xs lg:max-w-md px-4 py-3 rounded-2xl rounded-br-none bg-[linear-gradient(135deg,#555dff_0%,#555dffcc_100%)] text-white shadow-soft">
           <p className="text-sm leading-relaxed">{message}</p>
         </div>
       </div>
@@ -18,11 +17,8 @@ export function ChatBubble({ message, isUser }: ChatBubbleProps) {
   }
 
   return (
-    <div className="flex gap-3 mb-6">
-      <div className="w-8 h-8 rounded-full bg-ocean text-offwhite flex items-center justify-center shrink-0">
-        <IconRobot size={16} />
-      </div>
-      <p className="text-[15px] leading-relaxed text-ink pt-1">{message}</p>
+    <div className="mb-6">
+      <p className="text-[15px] leading-relaxed text-ink">{message}</p>
     </div>
   );
 }
@@ -35,11 +31,8 @@ export function TypingIndicator({ isVisible }: TypingIndicatorProps) {
   if (!isVisible) return null;
 
   return (
-    <div className="flex gap-3 mb-6">
-      <div className="w-8 h-8 rounded-full bg-ocean text-offwhite flex items-center justify-center shrink-0">
-        <IconRobot size={16} />
-      </div>
-      <div className="flex items-center gap-1 pt-3">
+    <div className="mb-6">
+      <div className="flex items-center gap-1">
         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
         <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
@@ -66,7 +59,7 @@ export function QuickReplyChip({ label, onClick, icon }: QuickReplyChipProps) {
   return (
     <button
       onClick={onClick}
-      className="px-4 py-2 bg-seaglass text-ink rounded-full text-sm font-medium hover:bg-opacity-80 transition-colors flex items-center gap-1.5"
+      className="btn btn-secondary btn-pill py-2 text-sm"
     >
       {icon}
       {label}

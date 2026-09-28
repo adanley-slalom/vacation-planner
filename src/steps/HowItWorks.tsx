@@ -45,7 +45,7 @@ export function HowItWorksStep() {
         <div className="mb-12">
           <button
             onClick={handleBack}
-            className="text-coral hover:text-coral-dark font-semibold mb-6 flex items-center gap-2"
+            className="text-coral hover:text-coral/70 font-semibold mb-6 flex items-center gap-2 transition-colors"
           >
             ← Back
           </button>
@@ -97,7 +97,7 @@ export function HowItWorksStep() {
         </div>
 
         {/* Features section */}
-        <div className="mb-16 bg-gradient-to-br from-seaglass/10 via-sand/10 to-coral/5 rounded-2xl p-8 md:p-12">
+        <div className="mb-16 card bg-gradient-to-br from-seaglass/10 via-sand/10 to-coral/5 p-8 md:p-12">
           <h2 className="text-3xl font-serif font-bold text-ink mb-8">Why Wayfare AI?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
@@ -126,7 +126,7 @@ export function HowItWorksStep() {
           <h2 className="text-3xl font-serif font-bold text-ink mb-6">Ready to plan your trip?</h2>
           <button
             onClick={handleBack}
-            className="px-8 py-3 bg-coral text-white rounded-full font-semibold hover:bg-coral-dark transition-colors inline-flex items-center gap-2"
+            className="btn btn-primary btn-pill py-3 px-8"
           >
             Start planning <IconArrowRight size={20} />
           </button>

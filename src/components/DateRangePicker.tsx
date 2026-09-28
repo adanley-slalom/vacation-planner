@@ -51,7 +51,7 @@ export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRange
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-5 py-5 border border-gray-300 rounded-lg bg-white hover:border-ocean transition-colors flex items-center justify-between"
+        className="input-field w-full px-5 py-5 hover:border-ocean transition-colors flex items-center justify-between"
       >
         <div className="flex items-center gap-3">
           <IconCalendar size={20} className="text-ocean" />
@@ -61,7 +61,7 @@ export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRange
       </button>
 
       {isOpen && (
-        <div className="absolute top-[calc(100%+8px)] left-0 bg-white border border-gray-300 rounded-xl shadow-lg p-6 z-20 w-max">
+        <div className="absolute top-[calc(100%+8px)] left-0 card border border-black/10 shadow-lifted p-6 z-20 w-max">
           <DayPicker
             mode="range"
             numberOfMonths={2}
@@ -82,11 +82,7 @@ export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRange
             <button
               onClick={handleDone}
               disabled={!(range?.from && range?.to)}
-              className={`px-6 py-2 rounded-lg font-semibold text-white text-sm transition-colors ${
-                range?.from && range?.to
-                  ? 'bg-coral hover:bg-orange-600 cursor-pointer'
-                  : 'bg-gray-300 cursor-not-allowed'
-              }`}
+              className="btn btn-primary py-2 text-sm"
             >
               Done
             </button>
