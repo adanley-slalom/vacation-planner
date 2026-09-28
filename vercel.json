@@ -1,5 +1,7 @@
 {
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
-  "envPrefix": "VITE_"
+  "env": {
+    "VITE_API_URL": "@api-url"
+  }
 }

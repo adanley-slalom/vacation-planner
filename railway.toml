@@ -1,0 +1,9 @@
+[build]
+command = "npm run build:server"
+
+[env]
+NODE_ENV = "production"
+PORT = "3000"
+GROQ_API_KEY = "placeholder"
+LLM_MODEL = "qwen/qwen3.8-27b"
+ITINERARY_LLM_MODEL = "openai/gpt-oss-120b"
