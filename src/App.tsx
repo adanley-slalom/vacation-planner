@@ -4,9 +4,11 @@ import { useAppContext } from './state/AppContext';
 import { TripBasicsStep } from './steps/TripBasics';
 import { ChatPlannerStep } from './steps/ChatPlanner';
 import { ItineraryViewStep } from './steps/ItineraryView';
+import { AllTripsViewStep } from './steps/AllTripsView';
+import { HowItWorksStep } from './steps/HowItWorks';
 
 function App() {
-  const { state } = useAppContext();
+  const { state, dispatch } = useAppContext();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
@@ -17,16 +19,27 @@ function App() {
       {/* Page header */}
       <header className="bg-white border-b border-gray-200">
         <div className="w-full px-6 py-4 flex items-center justify-between">
-          <a href="#" className="text-lg font-serif font-bold text-ink flex items-center gap-2">
+          <button
+            onClick={() => dispatch({ type: 'SET_STEP', payload: 1 })}
+            className="text-lg font-serif font-bold text-ink flex items-center gap-2"
+          >
             <IconPlane size={20} className="text-coral" /> Wayfare
-          </a>
+          </button>
           <nav className="hidden sm:flex gap-6 text-sm text-gray-600">
-            <a href="#trip-form" className="hover:text-coral">
+            <button 
+              onClick={() => {
+                dispatch({ type: 'SET_STEP', payload: 1 });
+                setTimeout(() => {
+                  document.getElementById('hero-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }}
+              className="hover:text-coral text-left"
+            >
               Plan a trip
-            </a>
-            <a href="#" className="hover:text-coral">
+            </button>
+            <button onClick={() => dispatch({ type: 'SET_STEP', payload: 5 })} className="hover:text-coral text-left">
               How it works
-            </a>
+            </button>
           </nav>
         </div>
       </header>
@@ -36,6 +49,10 @@ function App() {
         <TripBasicsStep />
       ) : state.step === 2 ? (
         <ChatPlannerStep />
+      ) : state.step === 4 ? (
+        <AllTripsViewStep />
+      ) : state.step === 5 ? (
+        <HowItWorksStep />
       ) : (
         <div className="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
           <ItineraryViewStep />
@@ -58,29 +75,19 @@ function App() {
             <div className="flex gap-10 text-sm">
               <div className="space-y-2">
                 <div className="font-semibold text-ink">Product</div>
-                <a href="#trip-form" className="block text-gray-500 hover:text-coral">
+                <button 
+                  onClick={() => {
+                    dispatch({ type: 'SET_STEP', payload: 1 });
+                    setTimeout(() => {
+                      document.getElementById('hero-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                  }}
+                  className="block text-gray-500 hover:text-coral text-left"
+                >
                   Plan a trip
-                </a>
+                </button>
                 <a href="#" className="block text-gray-500 hover:text-coral">
                   How it works
-                </a>
-              </div>
-              <div className="space-y-2">
-                <div className="font-semibold text-ink">Company</div>
-                <a href="#" className="block text-gray-500 hover:text-coral">
-                  About
-                </a>
-                <a href="#" className="block text-gray-500 hover:text-coral">
-                  Contact
-                </a>
-              </div>
-              <div className="space-y-2">
-                <div className="font-semibold text-ink">Legal</div>
-                <a href="#" className="block text-gray-500 hover:text-coral">
-                  Privacy
-                </a>
-                <a href="#" className="block text-gray-500 hover:text-coral">
-                  Terms
                 </a>
               </div>
             </div>

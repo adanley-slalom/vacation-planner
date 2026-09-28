@@ -19,7 +19,7 @@ export function BudgetInput({ value, onChange }: BudgetInputProps) {
           value > 0 ? 'pl-8 pr-5' : 'px-5'
         }`}
         min="0"
-        placeholder="Max Budget"
+        placeholder="Budget"
       />
     </div>
   );

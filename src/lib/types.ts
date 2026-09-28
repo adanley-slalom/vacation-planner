@@ -50,4 +50,4 @@ export type Itinerary = {
   needsCar: boolean;
 };
 
-export type AppStep = 1 | 2 | 3;
+export type AppStep = 1 | 2 | 3 | 4 | 5;

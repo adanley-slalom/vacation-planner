@@ -73,7 +73,7 @@ export function TripBasicsStep() {
   const { state, dispatch } = useAppContext();
   const [formData, setFormData] = useState<TripBasics>(
     state.tripBasics || {
-      budget: 0,
+      budget: 2500,
       startDate: '',
       endDate: '',
       days: 0,
@@ -126,6 +126,7 @@ export function TripBasicsStep() {
     <div>
       {/* Hero Section */}
       <div 
+        id="hero-section"
         className="min-h-[90vh] flex flex-col items-center justify-center relative bg-cover bg-center"
         style={{
           backgroundImage: 'url("https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1920&q=80")',
@@ -136,10 +137,10 @@ export function TripBasicsStep() {
         
         <div className="relative z-10 text-center mb-12 max-w-4xl px-4">
           <h1 className="text-5xl md:text-6xl lg:text-6xl font-serif font-bold text-white mb-4">
-            Plan <i>less</i>. Travel <i>more</i>.
+            Plan <span className="italic">less</span>. Travel <span className="italic">more</span>.
           </h1>
           <p className="text-xl md:text-2xl font-sans text-white/90">
-            Get a personalized itinerary in minutes.
+            Let Wayfare AI plan your perfect trip in minutes.
           </p>
         </div>
 
@@ -149,7 +150,7 @@ export function TripBasicsStep() {
           <div className="flex gap-4 items-end">
             {/* Budget Field - Left */}
             <div className="flex-1">
-              <label className="block text-sm font-medium text-ink mb-2">Max Budget</label>
+              <label className="block text-sm font-medium text-ink mb-2">Budget</label>
               <BudgetInput
                 value={formData.budget}
                 onChange={(budget) => setFormData({ ...formData, budget })}
@@ -201,7 +202,7 @@ export function TripBasicsStep() {
       <div className="max-w-6xl mx-auto w-full py-8 flex-1">
         <div className="mt-8">
           <h2 className="text-center text-3xl md:text-4xl font-serif font-bold text-ink mb-3">
-            From a few words to a full itinerary.
+            From a few words to a <span className="italic">full itinerary</span>
           </h2>
           <p className="text-center text-gray-600 max-w-xl mx-auto mb-6">
             No forms, no spreadsheets — just chat with Wayfare AI and watch your trip take shape in real time.
@@ -240,10 +241,10 @@ export function TripBasicsStep() {
 
         <div className="relative text-center mb-10 px-4">
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-ink mb-2">
-            Trips <span className="italic">tailored</span> to you
+            Discover your next <span className="italic">adventure</span>
           </h2>
           <p className="text-gray-600">
-            Real itineraries built by Wayfare AI for real budgets and dates
+            Browse inspiring destinations. AI builds your perfect itinerary in minutes.
           </p>
         </div>
 
@@ -272,7 +273,7 @@ export function TripBasicsStep() {
 
         <div className="relative text-center mt-10">
           <button
-            onClick={scrollToForm}
+            onClick={() => dispatch({ type: 'SET_STEP', payload: 4 })}
             className="px-8 py-3 bg-ink text-white rounded-full font-semibold hover:bg-black transition-colors cursor-pointer"
           >
             View All
