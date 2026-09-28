@@ -78,7 +78,10 @@ export function HowItWorksStep() {
                     {/* Content */}
                     <div className="pt-1 pb-8">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-coral text-white text-sm font-bold">
+                        <span
+                          className="inline-flex items-center justify-center w-7 h-7 rounded-full text-white text-sm font-bold shadow-soft"
+                          style={{ background: 'linear-gradient(135deg, #555dff 0%, #555dffcc 100%)' }}
+                        >
                           {step.number}
                         </span>
                         <h3 className="text-2xl font-serif font-bold text-ink">
@@ -126,7 +129,7 @@ export function HowItWorksStep() {
           <h2 className="text-3xl font-serif font-bold text-ink mb-6">Ready to plan your trip?</h2>
           <button
             onClick={handleBack}
-            className="btn btn-primary btn-pill py-3 px-8"
+            className="btn btn-dark btn-pill py-3 px-8"
           >
             Start planning <IconArrowRight size={20} />
           </button>

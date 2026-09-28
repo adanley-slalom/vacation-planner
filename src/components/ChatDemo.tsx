@@ -100,9 +100,9 @@ export function ChatDemo() {
 
       {/* Non-interactive input bar, purely illustrative */}
       <div className="px-4 pb-4">
-        <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full pl-4 pr-1.5 py-1.5">
+        <div className="flex items-center gap-2 bg-gray-50 border border-black/10 rounded-full pl-4 pr-1.5 py-1.5">
           <span className="flex-1 text-sm text-gray-400">Type your response...</span>
-          <span className="w-8 h-8 shrink-0 rounded-full bg-coral text-white flex items-center justify-center shadow-soft">
+          <span className="w-8 h-8 shrink-0 rounded-full bg-ink text-white flex items-center justify-center shadow-soft">
             <IconSend size={14} />
           </span>
         </div>

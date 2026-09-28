@@ -61,7 +61,7 @@ body {
 /* Sketch-inspired component system: soft layered shadows, generous radii, restrained accent color use */
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-base font-semibold
       transition-all duration-150 ease-out shadow-soft
       disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none disabled:shadow-none;
   }

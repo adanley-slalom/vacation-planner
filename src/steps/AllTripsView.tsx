@@ -64,12 +64,30 @@ const ALL_TRIPS = [
 ];
 
 export function AllTripsViewStep() {
-  const { dispatch } = useAppContext();
+  const { state, dispatch } = useAppContext();
 
   const handleTripClick = (trip: typeof ALL_TRIPS[0]) => {
-    // Reset to step 1 and trigger chat with this trip
-    dispatch({ type: 'SET_STEP', payload: 1 });
-    // Could implement themed chat functionality here
+    dispatch({
+      type: 'SET_TRIP_BASICS',
+      payload: state.tripBasics || {
+        budget: 2500,
+        startDate: '',
+        endDate: '',
+        days: 0,
+        origin: '',
+        travelers: 1,
+      },
+    });
+    dispatch({ type: 'SET_STEP', payload: 2 });
+    dispatch({
+      type: 'SET_MESSAGES',
+      payload: [
+        {
+          role: 'user',
+          content: `I'd love a ${trip.title} trip — ${trip.subtitle}.`,
+        },
+      ],
+    });
   };
 
   const handleBack = () => {

@@ -35,6 +35,7 @@ export function ChatPlannerStep() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const prevMessagesLengthRef = useRef(state.messages.length);
   const hasKickedOffRef = useRef(false);
+  const lastActionRef = useRef<(() => void) | null>(null);
 
   const tripBasics = state.tripBasics!;
   const messages = state.messages;
@@ -69,6 +70,7 @@ export function ChatPlannerStep() {
       }
     } catch (err) {
       setError('Failed to process your request. Please try again.');
+      lastActionRef.current = () => runAssistantTurn(currentMessages);
       console.error(err);
     } finally {
       setLoading(false);
@@ -86,6 +88,22 @@ export function ChatPlannerStep() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const buildSurpriseItinerary = async (withMessages: typeof messages) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const itinerary = await generateItinerary(tripBasics, withMessages, true);
+      dispatch({ type: 'SET_ITINERARY', payload: itinerary });
+      dispatch({ type: 'SET_STEP', payload: 3 });
+    } catch (err) {
+      setError('Failed to process your request. Please try again.');
+      lastActionRef.current = () => buildSurpriseItinerary(withMessages);
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSendMessage = async (text: string, surprise = false) => {
     if (!text.trim() && !surprise) return;
 
@@ -96,18 +114,7 @@ export function ChatPlannerStep() {
     setShowQuickReplies(false);
 
     if (surprise) {
-      setLoading(true);
-      setError(null);
-      try {
-        const itinerary = await generateItinerary(tripBasics, newMessages, true);
-        dispatch({ type: 'SET_ITINERARY', payload: itinerary });
-        dispatch({ type: 'SET_STEP', payload: 3 });
-      } catch (err) {
-        setError('Failed to process your request. Please try again.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
+      await buildSurpriseItinerary(newMessages);
     } else {
       await runAssistantTurn(newMessages);
     }
@@ -122,14 +129,14 @@ export function ChatPlannerStep() {
             'radial-gradient(ellipse 60% 50% at 50% 45%, rgba(135,128,255,0.16), transparent 70%)',
         }}
       />
-      <div className="relative w-full max-w-2xl h-[min(44rem,calc(100vh-6rem))] card shadow-lifted border border-black/5 flex flex-col overflow-hidden">
+      <div className="relative w-full max-w-3xl h-[min(48rem,calc(100vh-5rem))] card shadow-lifted border border-black/5 flex flex-col overflow-hidden">
         {/* Panel header */}
-        <div className="px-6 py-5 border-b border-black/5 shrink-0">
-          <h2 className="text-xl font-serif font-bold text-ink">Tell us about your ideal trip</h2>
+        <div className="px-8 py-6 border-b border-black/5 shrink-0">
+          <h2 className="text-2xl font-serif font-bold text-ink">Tell us about your ideal trip</h2>
         </div>
 
         {/* Scrollable message area */}
-        <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="flex-1 overflow-y-auto px-8 py-8">
           {messages.map((msg, idx) => (
             <ChatBubble key={idx} message={msg.content} isUser={msg.role === 'user'} />
           ))}
@@ -159,7 +166,7 @@ export function ChatPlannerStep() {
               <button
                 onClick={() => {
                   setError(null);
-                  setLoading(false);
+                  lastActionRef.current?.();
                 }}
                 className="btn btn-dark mt-3 py-1.5 text-sm"
               >
@@ -172,32 +179,32 @@ export function ChatPlannerStep() {
         </div>
 
         {/* Composer */}
-        <div className="px-4 sm:px-6 pt-3 pb-4 border-t border-black/5 bg-white/70 shrink-0">
+        <div className="px-5 sm:px-8 pt-4 pb-5 border-t border-black/5 bg-white/70 shrink-0">
           <button
             onClick={() => handleSendMessage('', true)}
             disabled={loading}
-            className="btn btn-secondary btn-pill mx-auto mb-3 py-1.5 px-4 text-xs"
+            className="btn btn-secondary btn-pill mx-auto mb-4 py-2 px-5 text-sm"
           >
-            <IconWand size={14} className="text-ocean" />
+            <IconWand size={16} className="text-ocean" />
             Build my itinerary
           </button>
-          <div className="input-field flex items-center gap-2 rounded-full pl-5 pr-1.5 py-1.5">
+          <div className="input-field flex items-center gap-2 rounded-full pl-6 pr-2 py-2">
             <input
               type="text"
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(userInput)}
               placeholder="Type your response..."
-              className="flex-1 bg-transparent focus:outline-none text-sm"
+              className="flex-1 bg-transparent focus:outline-none text-base"
               disabled={loading}
             />
             <button
               onClick={() => handleSendMessage(userInput)}
               disabled={loading || !userInput.trim()}
-              className="w-9 h-9 shrink-0 rounded-full bg-coral text-white flex items-center justify-center hover:bg-coral/90 disabled:bg-gray-300 transition-colors"
+              className="w-11 h-11 shrink-0 rounded-full bg-ink text-white flex items-center justify-center hover:bg-ink/90 disabled:bg-gray-300 transition-colors"
               aria-label="Send message"
             >
-              <IconSend size={16} />
+              <IconSend size={18} />
             </button>
           </div>
         </div>

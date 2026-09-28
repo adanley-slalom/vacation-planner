@@ -86,13 +86,16 @@ function App() {
                 >
                   Plan a trip
                 </button>
-                <a href="#" className="block text-gray-500 hover:text-coral">
+                <button
+                  onClick={() => dispatch({ type: 'SET_STEP', payload: 5 })}
+                  className="block text-gray-500 hover:text-coral text-left"
+                >
                   How it works
-                </a>
+                </button>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-100 mt-8 pt-6 text-xs text-gray-400 text-center">
+          <div className="border-t border-black/10 mt-8 pt-6 text-xs text-gray-400 text-center">
             © {new Date().getFullYear()} Wayfare. All prices shown are estimates.
           </div>
           </div>

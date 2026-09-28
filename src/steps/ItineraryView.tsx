@@ -8,6 +8,7 @@ import {
   buildAirbnbLink,
   buildKayakCarsLink,
 } from '../lib/bookingLinks';
+import { formatDisplayDateRange, nightsBetween } from '../lib/dates';
 import { useAppContext } from '../state/AppContext';
 
 export function ItineraryViewStep() {
@@ -20,7 +21,12 @@ export function ItineraryViewStep() {
   // blank — fall back to the itinerary's own day range, which is always populated.
   const displayStartDate = tripBasics.startDate || itinerary.days[0]?.date || '';
   const displayEndDate = tripBasics.endDate || itinerary.days[itinerary.days.length - 1]?.date || '';
+  const displayDateRange = formatDisplayDateRange(displayStartDate, displayEndDate);
   const displayOrigin = tripBasics.origin.trim() || 'Your city';
+  const nights = nightsBetween(displayStartDate, displayEndDate);
+  const travelerLabel = `${tripBasics.travelers} traveler${tripBasics.travelers !== 1 ? 's' : ''}`;
+  const hotelSuggestion = itinerary.lodgingSuggestions.find((l) => l.type === 'hotel');
+  const airbnbSuggestion = itinerary.lodgingSuggestions.find((l) => l.type === 'airbnb' || l.type === 'hostel');
 
   const handleStartOver = () => {
     dispatch({ type: 'RESET' });
@@ -67,7 +73,7 @@ export function ItineraryViewStep() {
     : '';
 
   return (
-    <div className="relative max-w-4xl mx-auto pb-16">
+    <div className="relative max-w-5xl mx-auto pb-20">
       {/* Ambient glow, echoes the chat step's radial background */}
       <div
         className="absolute -top-10 left-1/2 -translate-x-1/2 w-[40rem] h-[24rem] pointer-events-none print:hidden"
@@ -78,48 +84,60 @@ export function ItineraryViewStep() {
 
       {/* Header */}
       <div
-        className="relative text-white p-8 sm:p-10 rounded-2xl shadow-card mb-10 print:break-after-page overflow-hidden"
+        className="relative text-white p-10 sm:p-14 rounded-2xl shadow-card mb-12 print:break-after-page overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #212a4d 0%, #4b3f8f 55%, #b47eee 100%)' }}
       >
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold mb-3">{itinerary.destination}</h1>
-        <div className="text-base sm:text-lg text-white/75">
-          {displayStartDate} to {displayEndDate} • {tripBasics.travelers} traveler{tripBasics.travelers !== 1 ? 's' : ''}
+        <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">{itinerary.destination}</h1>
+        <div className="text-lg sm:text-xl text-white/75">
+          {displayDateRange} • {tripBasics.travelers} traveler{tripBasics.travelers !== 1 ? 's' : ''}
         </div>
         {itinerary.surpriseReason && (
-          <p className="mt-5 text-white/90 italic border-l-2 border-white/30 pl-4">
+          <p className="mt-6 text-lg text-white/90 italic border-l-2 border-white/30 pl-4">
             "Why we picked this: {itinerary.surpriseReason}"
           </p>
         )}
       </div>
 
       {/* Booking Cards */}
-      <div className="mb-10">
-        <h2 className="text-2xl font-serif font-bold text-ink mb-5">Book your trip</h2>
-        <div className="grid gap-5 md:grid-cols-2 print:grid-cols-1">
+      <div className="mb-12">
+        <h2 className="text-3xl font-serif font-bold text-ink mb-6">Book your trip</h2>
+        <div className="grid gap-6 md:grid-cols-2 print:grid-cols-1">
           <BookingCard
             title="Flights"
-            description={`${displayOrigin} → ${itinerary.destinationAirportCode}`}
+            primary={`${displayOrigin} → ${itinerary.destination} (${itinerary.destinationAirportCode})`}
+            meta={[displayDateRange, travelerLabel, 'Round trip']}
             bookingUrl={flightsLink}
-            icon={<IconPlane size={22} />}
+            icon={<IconPlane size={24} />}
           />
           <BookingCard
             title="Hotel"
-            description={`${displayStartDate} to ${displayEndDate}`}
+            primary={hotelSuggestion?.name || `Stay in ${itinerary.destination}`}
+            meta={[
+              hotelSuggestion?.area,
+              `${displayDateRange} · ${nights} night${nights !== 1 ? 's' : ''}`,
+              hotelSuggestion && `$${hotelSuggestion.nightlyRate}/night`,
+            ]}
             bookingUrl={hotelLink}
-            icon={<IconBed size={22} />}
+            icon={<IconBed size={24} />}
           />
           <BookingCard
             title="Airbnb"
-            description={`${displayStartDate} to ${displayEndDate}`}
+            primary={airbnbSuggestion?.name || `Stay in ${itinerary.destination}`}
+            meta={[
+              airbnbSuggestion?.area,
+              `${displayDateRange} · ${nights} night${nights !== 1 ? 's' : ''}`,
+              airbnbSuggestion && `$${airbnbSuggestion.nightlyRate}/night`,
+            ]}
             bookingUrl={airbnbLink}
-            icon={<IconHome size={22} />}
+            icon={<IconHome size={24} />}
           />
           {itinerary.needsCar && (
             <BookingCard
               title="Car Rental"
-              description={`Pick up and drop off in ${itinerary.destination}`}
+              primary={`Pick up & drop off in ${itinerary.destination}`}
+              meta={[displayDateRange, travelerLabel]}
               bookingUrl={carLink}
-              icon={<IconCar size={22} />}
+              icon={<IconCar size={24} />}
             />
           )}
         </div>
@@ -129,8 +147,8 @@ export function ItineraryViewStep() {
       <CostBreakdown itinerary={itinerary} budget={tripBasics.budget} />
 
       {/* Day-by-day itinerary */}
-      <div className="mb-10">
-        <h2 className="text-2xl font-serif font-bold text-ink mb-5">Your itinerary</h2>
+      <div className="mb-12">
+        <h2 className="text-3xl font-serif font-bold text-ink mb-6">Your itinerary</h2>
         <div className="print:break-inside-avoid">
           {itinerary.days.map((day) => (
             <DayTimeline key={day.day} day={day} destination={itinerary.destination} />
@@ -139,14 +157,14 @@ export function ItineraryViewStep() {
       </div>
 
       {/* Disclaimer */}
-      <div className="text-callout text-sm text-gray-600 mb-10">
+      <div className="text-callout text-base text-gray-600 mb-12">
         <p>
           <strong>Note:</strong> Prices are estimates. Final prices shown on booking sites may vary.
         </p>
       </div>
 
       {/* Actions */}
-      <div className="flex flex-wrap gap-3 justify-center print:hidden">
+      <div className="flex flex-wrap gap-4 justify-center print:hidden">
         <button
           onClick={handleAdjustInChat}
           className="btn btn-secondary"
@@ -155,7 +173,7 @@ export function ItineraryViewStep() {
         </button>
         <button
           onClick={handlePrint}
-          className="btn btn-primary"
+          className="btn btn-secondary"
         >
           Print / Save as PDF
         </button>

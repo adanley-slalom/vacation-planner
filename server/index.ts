@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import type { TripBasics, ChatMessage, Itinerary } from '../src/lib/types';
+import type { TripBasics, ChatMessage } from '../src/lib/types';
 import { chatWithAssistant, generateItinerary as generateItineraryAI } from './llm';
 import { validateItinerary } from './validation';
 

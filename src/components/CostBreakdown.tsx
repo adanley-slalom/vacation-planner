@@ -33,15 +33,15 @@ export function CostBreakdown({ itinerary, budget }: CostBreakdownProps) {
   ];
 
   return (
-    <div className="card p-6 sm:p-8 mb-10">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-serif font-bold text-ink">Cost breakdown</h3>
+    <div className="card p-8 sm:p-10 mb-12">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-2xl font-serif font-bold text-ink">Cost breakdown</h3>
         <span className={`pill ${status.classes}`}>{status.label}</span>
       </div>
 
-      <div className="space-y-3.5 mb-6">
+      <div className="space-y-4 mb-8">
         {rows.map((row) => (
-          <div key={row.label} className="flex justify-between text-[15px]">
+          <div key={row.label} className="flex justify-between text-base">
             <span className="text-gray-600">{row.label}</span>
             <span className="font-semibold text-ink">${row.value}</span>
           </div>

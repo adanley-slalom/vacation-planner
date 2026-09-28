@@ -9,8 +9,8 @@ export function ChatBubble({ message, isUser }: ChatBubbleProps) {
   if (isUser) {
     return (
       <div className="flex justify-end mb-6">
-        <div className="max-w-xs lg:max-w-md px-4 py-3 rounded-2xl rounded-br-none bg-[linear-gradient(135deg,#555dff_0%,#555dffcc_100%)] text-white shadow-soft">
-          <p className="text-sm leading-relaxed">{message}</p>
+        <div className="max-w-sm lg:max-w-lg px-5 py-3.5 rounded-2xl rounded-br-none bg-[linear-gradient(135deg,#555dff_0%,#555dffcc_100%)] text-white shadow-soft">
+          <p className="text-base leading-relaxed">{message}</p>
         </div>
       </div>
     );
@@ -18,7 +18,7 @@ export function ChatBubble({ message, isUser }: ChatBubbleProps) {
 
   return (
     <div className="mb-6">
-      <p className="text-[15px] leading-relaxed text-ink">{message}</p>
+      <p className="text-base leading-relaxed text-ink">{message}</p>
     </div>
   );
 }

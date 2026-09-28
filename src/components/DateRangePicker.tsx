@@ -75,14 +75,14 @@ export function DateRangePicker({ startDate, endDate, onDatesChange }: DateRange
               return false;
             }}
           />
-          <div className="flex items-center justify-end gap-6 mt-4 pt-4 border-t border-gray-200">
+          <div className="flex items-center justify-end gap-6 mt-4 pt-4 border-t border-black/10">
             <button onClick={handleClear} className="text-ocean font-semibold text-sm hover:underline">
               Clear
             </button>
             <button
               onClick={handleDone}
               disabled={!(range?.from && range?.to)}
-              className="btn btn-primary py-2 text-sm"
+              className="btn btn-dark py-2 text-sm"
             >
               Done
             </button>
