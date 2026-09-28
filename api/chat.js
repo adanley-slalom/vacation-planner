@@ -1,6 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Groq from 'groq-sdk';
-import type { TripBasics, ChatMessage } from '../src/lib/types';
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -8,13 +6,13 @@ const groq = new Groq({
 
 const MODEL = process.env.LLM_MODEL || 'qwen/qwen3.8-27b';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { basics, messages } = req.body as { basics: TripBasics; messages: ChatMessage[] };
+    const { basics, messages } = req.body;
 
     const hasDates = Boolean(basics.startDate && basics.endDate);
     const hasBudget = basics.budget > 0;
@@ -47,9 +45,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const readyToPlan = reply.includes('[READY]');
     const cleanReply = reply.replace('[READY]', '').trim();
 
-    res.json({ reply: cleanReply, readyToPlan });
+    res.status(200).json({ reply: cleanReply, readyToPlan });
   } catch (error) {
     console.error('Chat error:', error);
-    res.status(500).json({ error: 'Failed to process chat request' });
+    res.status(500).json({ error: 'Failed to process chat request', details: error.message });
   }
 }

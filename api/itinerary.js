@@ -1,7 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Groq from 'groq-sdk';
 import { z } from 'zod';
-import type { TripBasics, ChatMessage, Itinerary } from '../src/lib/types';
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -49,7 +47,7 @@ const ItinerarySchema = z.object({
   needsCar: z.boolean(),
 });
 
-function validateItinerary(data: unknown): Itinerary {
+function validateItinerary(data) {
   try {
     const validated = ItinerarySchema.parse(JSON.parse(String(data)));
     return validated;
@@ -59,17 +57,13 @@ function validateItinerary(data: unknown): Itinerary {
   }
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { basics, messages, surprise } = req.body as {
-      basics: TripBasics;
-      messages: ChatMessage[];
-      surprise: boolean;
-    };
+    const { basics, messages, surprise } = req.body;
 
     const itineraryType = `
 type Activity = {
@@ -121,9 +115,9 @@ Rules: today's date is ${new Date().toISOString().slice(0, 10)}; every day's "da
     content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '');
 
     const itinerary = validateItinerary(content);
-    res.json(itinerary);
+    res.status(200).json(itinerary);
   } catch (error) {
     console.error('Itinerary error:', error);
-    res.status(500).json({ error: 'Failed to generate itinerary' });
+    res.status(500).json({ error: 'Failed to generate itinerary', details: error.message });
   }
 }
