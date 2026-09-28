@@ -126,7 +126,7 @@ export function TripBasicsStep() {
     <div>
       {/* Hero Section */}
       <div 
-        className="min-h-screen flex flex-col items-center justify-center relative bg-cover bg-center"
+        className="min-h-[90vh] flex flex-col items-center justify-center relative bg-cover bg-center"
         style={{
           backgroundImage: 'url("https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1920&q=80")',
         }}
@@ -134,9 +134,9 @@ export function TripBasicsStep() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40" />
         
-        <div className="relative z-10 text-center mb-12 max-w-2xl px-4">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-4">
-            Stop scrolling. Start traveling.
+        <div className="relative z-10 text-center mb-12 max-w-4xl px-4">
+          <h1 className="text-5xl md:text-6xl lg:text-6xl font-serif font-bold text-white mb-4">
+            Plan <i>less</i>. Travel <i>more</i>.
           </h1>
           <p className="text-xl md:text-2xl font-sans text-white/90">
             Get a personalized itinerary in minutes.
@@ -198,8 +198,8 @@ export function TripBasicsStep() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto w-full px-4 py-8 flex-1">
-        <div className="mt-16">
+      <div className="max-w-6xl mx-auto w-full py-8 flex-1">
+        <div className="mt-8">
           <h2 className="text-center text-3xl md:text-4xl font-serif font-bold text-ink mb-3">
             From a few words to a full itinerary.
           </h2>
@@ -248,7 +248,7 @@ export function TripBasicsStep() {
         </div>
 
         <div className="marquee-container relative overflow-hidden">
-          <div className="flex gap-4 w-max animate-marquee">
+          <div className="flex gap-6 w-max animate-marquee">
             {[...INSPIRATION_TRIPS, ...INSPIRATION_TRIPS].map((trip, idx) => (
               <div
                 key={`${trip.title}-${idx}`}
