@@ -1,6 +1,6 @@
 import type { TripBasics, ChatMessage, Itinerary } from './types';
 
-const API_BASE = '/api';
+const API_BASE = process.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export async function sendChatMessage(
   basics: TripBasics,
