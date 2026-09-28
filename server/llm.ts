@@ -6,6 +6,10 @@ const groq = new Groq({
 });
 
 const MODEL = process.env.LLM_MODEL || 'mixtral-8x7b-32768';
+// Itinerary generation needs a much larger output than chat; qwen3.8-27b's
+// output-tokens-per-minute limit on this account (1000) is too low for that,
+// so use a model with a higher OTPM budget for this call.
+const ITINERARY_MODEL = process.env.ITINERARY_LLM_MODEL || 'openai/gpt-oss-120b';
 
 export async function chatWithAssistant(basics: TripBasics, messages: ChatMessage[]): Promise<string> {
   const hasDates = Boolean(basics.startDate && basics.endDate);
@@ -79,7 +83,7 @@ Rules: ${basics.budget > 0 ? `total cost must fit within $${basics.budget}` : 'i
   }
 
   const response = await groq.chat.completions.create({
-    model: MODEL,
+    model: ITINERARY_MODEL,
     messages: [
       { role: 'system', content: systemPrompt },
       ...messages.map((m) => ({ role: m.role, content: m.content })),
