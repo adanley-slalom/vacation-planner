@@ -1,5 +1,10 @@
 {
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
-  "envPrefix": "VITE_"
+  "envPrefix": "VITE_",
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "nodejs20.x"
+    }
+  }
 }
