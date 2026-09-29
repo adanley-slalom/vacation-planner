@@ -70,7 +70,7 @@ export function HowItWorksStep() {
                       <div className="w-16 h-16 rounded-full bg-gradient-to-br from-coral/20 to-seaglass/20 flex items-center justify-center flex-shrink-0 mb-4">
                         <IconComponent size={32} className="text-coral" strokeWidth={1.5} />
                       </div>
-                      {idx < steps.length - 1 && (
+                      {idx < steps.length - 2 && (
                         <div className="hidden md:block w-0.5 h-12 bg-gradient-to-b from-coral/30 to-transparent mt-2" />
                       )}
                     </div>
