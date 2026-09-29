@@ -171,4 +171,4 @@ Generate a full day-by-day itinerary with costs and booking links.
 
 ## License
 
-MIT License. See LICENSE file for details.
+MIT
