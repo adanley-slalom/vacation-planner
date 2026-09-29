@@ -125,16 +125,16 @@ export function TripBasicsStep() {
         id="hero-section"
         className="min-h-[90vh] flex flex-col items-center justify-center relative bg-cover bg-center"
         style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1698307781486-7c63dadf5fb7?auto=format&fit=crop&w=1920&q=80")',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
         }}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40" />
         
         <div className="relative z-10 text-center mb-14 max-w-7xl px-4">
-          <h1 className="text-[clamp(2.25rem,5.5vw,5.5rem)] font-serif font-bold text-white mb-6 leading-[1.05] sm:whitespace-nowrap">
+          <h2 className="text-[clamp(2.25rem,5.5vw,5.5rem)] font-serif font-bold text-white mb-6 leading-[1.05] sm:whitespace-nowrap">
             Plan <span className="italic">less</span>. Travel <span className="italic">more</span>.
-          </h1>
+          </h2>
           <p className="text-2xl md:text-3xl font-sans text-white/90">
             Let Wayfare AI plan your perfect trip in minutes.
           </p>
@@ -203,8 +203,8 @@ export function TripBasicsStep() {
           {/* Image side */}
           <div className="relative md:w-1/2 h-64 md:h-auto shrink-0">
             <img
-              src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=1200&q=80"
-              alt="Northern lights over a snowy fjord in Norway"
+              src="https://images.unsplash.com/photo-1518125790914-39f9ed92cb7e?q=80&w=2880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Scenic coastal landscape with boats"
               className="absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-ocean/80 via-ocean/10 to-transparent" />
