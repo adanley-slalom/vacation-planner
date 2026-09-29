@@ -171,4 +171,4 @@ Generate a full day-by-day itinerary with costs and booking links.
 
 ## License
 
-Training project for Protogen 300.
+MIT License. See LICENSE file for details.
