@@ -13,7 +13,7 @@ A simple, single-page web app that plans a vacation in three steps using AI. Bui
 - **Frontend**: React 19 + Vite + TypeScript + Tailwind CSS
 - **Calendar**: react-day-picker
 - **Backend**: Express.js + Node.js
-- **AI**: OpenAI API (configurable)
+- **AI**: Groq API (with support for multiple models)
 - **Validation**: Zod
 - **Booking Links**: Deep links to Google Flights, Booking.com, Airbnb, Kayak, Viator
 
@@ -21,8 +21,8 @@ A simple, single-page web app that plans a vacation in three steps using AI. Bui
 
 ### Prerequisites
 
-- Node.js 18+
-- OpenAI API key (or compatible LLM API)
+- Node.js 22+
+- Groq API key (free tier available at https://console.groq.com)
 
 ### Installation
 
@@ -36,10 +36,12 @@ npm install
 cp .env.example .env
 ```
 
-3. Add your LLM API key to `.env`:
+3. Add your Groq API key to `.env`:
 ```
-LLM_API_KEY=sk-...
-LLM_MODEL=gpt-4o-mini
+GROQ_API_KEY=gsk_...
+LLM_MODEL=qwen/qwen3.8-27b
+ITINERARY_LLM_MODEL=openai/gpt-oss-120b
+VITE_API_URL=http://localhost:3001/api
 PORT=3001
 ```
 
@@ -64,9 +66,12 @@ npm run build
 
 ```
 wayfare/
+├─ api/                       # Serverless functions (Vercel deployment)
+│  ├─ chat.js
+│  └─ itinerary.js
 ├─ server/
 │  ├─ index.ts            # Express app, routes
-│  ├─ llm.ts              # LLM API wrapper
+│  ├─ llm.ts              # Groq API wrapper
 │  └─ validation.ts       # Zod validation schemas
 ├─ src/
 │  ├─ App.tsx             # Main router
@@ -91,7 +96,8 @@ wayfare/
 ├─ package.json
 ├─ tailwind.config.js
 ├─ tsconfig.json
-└─ .env.example
+├─ .env.example
+└─ README.md
 ```
 
 ## API Endpoints
