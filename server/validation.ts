@@ -43,7 +43,34 @@ const ItinerarySchema = z.object({
 
 export function validateItinerary(data: unknown): Itinerary {
   try {
-    const validated = ItinerarySchema.parse(JSON.parse(String(data)));
+    let jsonStr = String(data).trim();
+    
+    // Attempt to repair common JSON formatting issues from LLM output
+    try {
+      // Remove markdown code fences if present
+      jsonStr = jsonStr.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+      
+      // Fix single quotes to double quotes (but preserve apostrophes in text)
+      // This is a bit tricky - only replace quotes that are around keys or wrapping values
+      jsonStr = jsonStr.replace(/: '/g, ': "').replace(/', /g, '", ');
+      jsonStr = jsonStr.replace(/: "/g, ': "'); // Fix double conversion
+      
+      // Ensure the JSON ends properly
+      if (!jsonStr.endsWith('}')) {
+        // Find the last complete object closing
+        const lastBrace = jsonStr.lastIndexOf('}');
+        if (lastBrace > 0) {
+          jsonStr = jsonStr.substring(0, lastBrace + 1);
+        }
+      }
+      
+      JSON.parse(jsonStr);
+    } catch (repairError) {
+      // If repair didn't work, try without repair
+      jsonStr = String(data).trim();
+    }
+    
+    const validated = ItinerarySchema.parse(JSON.parse(jsonStr));
     return validated;
   } catch (error) {
     console.error('Validation error:', error);

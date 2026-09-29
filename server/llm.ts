@@ -71,9 +71,21 @@ type Itinerary = {
   needsCar: boolean;
 };`;
 
-  let systemPrompt = `Create a vacation itinerary as JSON only, matching this TypeScript type exactly:
-${itineraryType}. No markdown, no commentary.
-Rules: today's date is ${new Date().toISOString().slice(0, 10)}; every day's "date" field must be a real calendar date on or after today (never in the past) — ${basics.startDate ? `start from ${basics.startDate}` : 'choose a start date from the conversation, or a sensible upcoming date if none was given'}; ${basics.budget > 0 ? `total cost must fit within $${basics.budget}` : 'infer a reasonable total cost from the conversation and destination'}; ${basics.days > 0 ? `include one entry per day for all ${basics.days} days` : 'choose a sensible trip length (e.g. 4-7 days) based on the conversation'}; use realistic estimated prices in USD; set needsCar based on the destination; lodgingSuggestions[].type must be exactly one of "hotel", "airbnb", or "hostel" (lowercase, no other values).`
+  let systemPrompt = `You MUST respond with ONLY valid JSON, nothing else. No markdown, no commentary, no extra text.
+JSON schema:
+${itineraryType}
+
+Rules:
+- Generate ONLY JSON - do not include code fences or any text outside the JSON
+- All string values MUST use double quotes only
+- All property names MUST be exactly as shown (double-quoted)
+- Dates must be real calendar dates on or after today (${new Date().toISOString().slice(0, 10)})
+- ${basics.startDate ? `Start from ${basics.startDate}` : 'Choose a sensible start date'}
+- ${basics.budget > 0 ? `Total cost must fit within $${basics.budget}` : 'Infer reasonable cost'}
+- ${basics.days > 0 ? `Include exactly ${basics.days} days of activities` : 'Create 4-7 days'}
+- Use realistic USD prices
+- lodgingSuggestions[].type must be exactly "hotel", "airbnb", or "hostel" (lowercase only)
+- Ensure every JSON array and object is properly closed`
 
   if (surprise) {
     systemPrompt += basics.startDate
