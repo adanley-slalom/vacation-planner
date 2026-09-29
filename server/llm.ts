@@ -5,11 +5,10 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-const MODEL = process.env.LLM_MODEL || 'mixtral-8x7b-32768';
-// Itinerary generation needs a much larger output than chat; qwen3.8-27b's
-// output-tokens-per-minute limit on this account (1000) is too low for that,
-// so use a model with a higher OTPM budget for this call.
-const ITINERARY_MODEL = process.env.ITINERARY_LLM_MODEL || 'openai/gpt-oss-120b';
+const MODEL = process.env.LLM_MODEL || 'qwen/qwen3.8-27b';
+// Itinerary generation needs a much larger output than chat; use the same model
+// but with reduced tokens to stay within free tier rate limits.
+const ITINERARY_MODEL = process.env.ITINERARY_LLM_MODEL || 'qwen/qwen3.8-27b';
 
 export async function chatWithAssistant(basics: TripBasics, messages: ChatMessage[]): Promise<string> {
   const hasDates = Boolean(basics.startDate && basics.endDate);
@@ -89,7 +88,7 @@ Rules: today's date is ${new Date().toISOString().slice(0, 10)}; every day's "da
       ...messages.map((m) => ({ role: m.role, content: m.content })),
     ],
     temperature: 0.7,
-    max_tokens: 4000,
+    max_tokens: 2000,
   });
 
   let content = response.choices[0].message.content || '';

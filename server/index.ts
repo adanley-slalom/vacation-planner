@@ -34,13 +34,30 @@ app.post('/api/itinerary', async (req: Request, res: Response) => {
       surprise: boolean;
     };
 
-    const itineraryJson = await generateItineraryAI(basics, messages, surprise);
-    const itinerary = validateItinerary(itineraryJson);
-
-    res.json(itinerary);
+    let itinerary;
+    let lastError;
+    
+    // Retry up to 3 times with exponential backoff for rate limiting
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const itineraryJson = await generateItineraryAI(basics, messages, surprise);
+        itinerary = validateItinerary(itineraryJson);
+        res.json(itinerary);
+        return;
+      } catch (error) {
+        lastError = error;
+        if (attempt < 2) {
+          // Wait before retrying (1s, then 2s)
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+        }
+      }
+    }
+    
+    console.error('Itinerary error after retries:', lastError);
+    res.status(500).json({ error: 'Failed to generate itinerary. Please try again in a moment.' });
   } catch (error) {
     console.error('Itinerary error:', error);
-    res.status(500).json({ error: 'Failed to generate itinerary' });
+    res.status(500).json({ error: 'Failed to process your request. Please try again.' });
   }
 });
 
